@@ -9,7 +9,7 @@ def print_randint(a, b):
     return num
 
 class vex():
-
+    radius = 20
     def __str__(self):
         string = "Colour: %d, %d, %d" % (self.colour.r, self.colour.g, self.colour.b)
         #string = "Colour:", self.colour.r, self.colour.g, self.colour.b
@@ -28,27 +28,35 @@ class vex():
         self.yMod = -5
         self.x = x
         self.y = y
-        print self.__str__()
+        #print self.__str__()
 
     def draw(self, surface):
         pygame.draw.polygon(surface, self.colour, self.get_points_tuple(), self.width)
 
     def update(self, surface): # surface => check collision with outer bounds
-        if self.x < surface.get_width() and self.x > 0 and self.y < surface.get_height() and self.y > 0:
-                if self.xMod % 5 == 0:
-                    self.xMod = -self.xMod - 1
-                else:
-                    self.xMod -= 2
-                if self.yMod % 5 == 0:
-                    self.yMod = -self.yMod - 1
-                else:
-                    self.yMod -= 2
-                for p in self.points:
-                    p.x += self.xMod
-                    p.y += self.yMod
-                self.x += self.xMod
-                self.y += self.yMod
-
+        """
+        if ((self.x < surface.get_width() and self.x > 0)
+            and (self.y < surface.get_height() and self.y > 0)):
+        if self.xMod % 5 == 0:
+            self.xMod = -self.xMod - 1
+        else:
+            self.xMod -= 2
+        if self.yMod % 5 == 0:
+            self.yMod = -self.yMod - 1
+        else:
+            self.yMod -= 2
+        for p in self.points:
+            p.x += self.xMod
+            p.y += self.yMod
+        self.x += self.xMod
+        self.y += self.yMod
+        """
+        for p in self.points:
+            p.x += self.xMod
+            p.y += self.yMod
+        self.x += self.xMod
+        self.y += self.yMod
+        
 
     def get_points_tuple(self):
         pts = []
@@ -102,25 +110,25 @@ class vex():
             col_b = randint(v.colour.b, self.colour.b)
 
         if rand_r and (col_r + 100) <= 255 and col_r >= 0:
-            col_r += print_randint(1,100)
+            col_r += randint(1,100)
         elif rand_r and (col_r + 100) > 255:
-            col_r -= print_randint(1,100)
+            col_r -= randint(1,100)
         
         if rand_g and (col_g + 100) <= 255 and col_g >= 0:
-            col_g += print_randint(1, 100)
+            col_g += randint(1, 100)
         elif rand_g and (col_g + 100) > 255:
-            col_g -= print_randint(1, 100)
+            col_g -= randint(1, 100)
 
         if rand_b and (col_b + 100) <= 255 and col_b >= 0:
-            col_b += print_randint(1, 100)
+            col_b += randint(1, 100)
         elif rand_b and (col_b + 100) > 255:
-            col_b -= print_randint(1, 100)
+            col_b -= randint(1, 100)
 
         colour = pygame.Color(col_r, col_g, col_b)
         # Grab points from both parents and generate random ones
         for i in xrange(0, num_pts/2):
             if i % 5 == 0:
-                pt = vector2(randint(-30, 30), randint(-30, 30))
+                pt = vector2(randint(-self.radius, self.radius), randint(-self.radius, self.radius))
                 pts.append(pt + pos)
             elif i % 2 == 0:
                 if i < len(this_rel_pts):

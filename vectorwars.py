@@ -19,7 +19,7 @@ def gen_shape(x, y):
     col_b = randint(10, 255)
     colour = pygame.Color(col_r, col_g, col_b)
     for i in range(1, num_pts):
-         pts.append(vector2(randint(x-40, x+40), randint(y-40, y+40)))
+         pts.append(vector2(randint(x-vex.radius, x+vex.radius), randint(y-vex.radius, y+vex.radius)))
     return vex(x, y, colour, pts, 2)
 
 def main():
@@ -44,9 +44,11 @@ def main():
                 count += 1
         for s in shapes:
             if s.x < 0 or s.x > 800:
-                shapes.remove(s)
+                #shapes.remove(s)
+                s.xMod = -s.xMod
             elif s.y < 0 or s.y > 600:
-                shapes.remove(s)
+                #shapes.remove(s)
+                s.yMod = -s.yMod
             s.update(screen)
             s.draw(screen)
         pygame.display.update()
