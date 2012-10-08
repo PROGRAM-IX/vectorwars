@@ -35,7 +35,6 @@ class vex():
 
     def update(self, surface): # surface => check collision with outer bounds
         if self.x < surface.get_width() and self.x > 0 and self.y < surface.get_height() and self.y > 0:
-                #SHTOP
                 if self.xMod % 5 == 0:
                     self.xMod = -self.xMod - 1
                 else:
@@ -75,7 +74,7 @@ class vex():
         pos = vector2(x, y) # vector of position to place child
         this_rel_pts = self.get_relative_points_vector2() 
         v_rel_pts = v.get_relative_points_vector2()
-        
+        # decide number of points in child
         if len(this_rel_pts) < len(v_rel_pts):
             num_pts = randint(len(this_rel_pts), len(v_rel_pts))
         else:
@@ -118,8 +117,8 @@ class vex():
             col_b -= print_randint(1, 100)
 
         colour = pygame.Color(col_r, col_g, col_b)
-        
-        for i in xrange(0, num_pts):
+        # Grab points from both parents and generate random ones
+        for i in xrange(0, num_pts/2):
             if i % 5 == 0:
                 pt = vector2(randint(-30, 30), randint(-30, 30))
                 pts.append(pt + pos)
@@ -133,5 +132,8 @@ class vex():
                     pts.append(v_rel_pts[i] + pos)
                 else:
                     pts.append(this_rel_pts[i] + pos)
-
+        pts_rev = pts[:]
+        pts_rev.reverse()
+        for i in pts_rev:
+            pts.append(vector2(x - i.x, y - i.y) + pos)
         return vex(x, y, colour, pts, 2)

@@ -13,7 +13,7 @@ clock = pygame.time.Clock()
 
 def gen_shape(x, y):
     pts = []
-    num_pts = randint(4, 10)
+    num_pts = randint(4, 20)
     col_r = randint(10, 255)
     col_g = randint(10, 255)
     col_b = randint(10, 255)
@@ -31,12 +31,15 @@ def main():
         for e in pygame.event.get():
             if e.type == KEYDOWN and e.key == K_q:
                 return
-            if e.type == MOUSEBUTTONDOWN:
+            elif e.type == MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
-                if len(shapes) >= 2:
-                    shapes.append(shapes[-1].reproduce(shapes[-2], 
+                if e.button == 1:
+                    if len(shapes) >= 2:
+                        shapes.append(shapes[-1].reproduce(shapes[-2], 
                             pos[0], pos[1]))
-                else:           
+                    else:           
+                        shapes.append(gen_shape(pos[0], pos[1]))
+                elif e.button == 3:
                     shapes.append(gen_shape(pos[0], pos[1]))
                 count += 1
         for s in shapes:
