@@ -56,7 +56,7 @@ class vex():
             p.y += self.yMod
         self.x += self.xMod
         self.y += self.yMod
-        
+        #print"DERP"        
 
     def get_points_tuple(self):
         pts = []

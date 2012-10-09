@@ -4,6 +4,7 @@ from random import *
 
 from vector2 import vector2
 from vex import vex
+from player import vex_player
 
 screen = None
 shapes = []
@@ -18,19 +19,30 @@ def gen_shape(x, y):
     col_g = randint(10, 255)
     col_b = randint(10, 255)
     colour = pygame.Color(col_r, col_g, col_b)
-    for i in range(1, num_pts):
+    for i in range(0, num_pts/2):
          pts.append(vector2(randint(x-vex.radius, x+vex.radius), randint(y-vex.radius, y+vex.radius)))
+    pts_rev = pts[:]
+    pts_rev.reverse()
+    for i in pts_rev:
+        pts.append(vector2(x - i.x, y - i.y)+vector2(x,y))
     return vex(x, y, colour, pts, 2)
 
 def main():
     global count, shapes, screen, clock
     screen = pygame.display.set_mode((800, 600))
     shapes = []
+    arrow_pts = [vector2(-30, -10), vector2(10, -10), vector2(10, -20),
+            vector2(30, 0), vector2(10, 20), vector2(10, 10), 
+            vector2(-30, 10)]
+    shapes.append(vex_player(10, 10, Color(255, 255, 255), arrow_pts, 2))
     while True:
         screen.fill(0)
         for e in pygame.event.get():
-            if e.type == KEYDOWN and e.key == K_q:
-                return
+            if e.type == KEYDOWN:
+                if e.key == K_q:
+                    return
+                elif e.key == K_r:
+                    del shapes[:]
             elif e.type == MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
                 if e.button == 1:
