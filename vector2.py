@@ -1,3 +1,5 @@
+import math
+
 class vector2():
     """Most of this taken from Will McGugan's Beginning Game Development 
     with Python and Pygame"""
@@ -19,6 +21,19 @@ class vector2():
         magnitude = self.get_magnitude()
         self.x = magnitude/self.x
         self.y = magnitude/self.y
+    
+    # my dot product function
+    def dot_product(self, other):
+        # A dot B = A B cos theta = |A||B| cos theta
+        # or A dot B = AxBx + AyBy + AzBz
+        return self.x*other.x + self.y*other.y
+
+    def angle_between(self, other):
+        # cos(theta) = 1/(|A||B|)
+        #d = (1/(self.get_magnitude()*other.get_magnitude()))
+        #print d
+        #return math.acosh(d)
+        pass
 
     def __add__(self, rhs): # rhs = right hand side of + operation
         return vector2(self.x + rhs.x, self.y + rhs.y)

@@ -14,7 +14,7 @@ clock = pygame.time.Clock()
 
 def gen_shape(x, y):
     pts = []
-    num_pts = randint(4, 20)
+    num_pts = randint(4, 50)
     col_r = randint(10, 255)
     col_g = randint(10, 255)
     col_b = randint(10, 255)
@@ -31,10 +31,11 @@ def main():
     global count, shapes, screen, clock
     screen = pygame.display.set_mode((800, 600))
     shapes = []
-    arrow_pts = [vector2(-30, -10), vector2(10, -10), vector2(10, -20),
-            vector2(30, 0), vector2(10, 20), vector2(10, 10), 
-            vector2(-30, 10)]
-    shapes.append(vex_player(10, 10, Color(255, 255, 255), arrow_pts, 2))
+    arrow_pts = [vector2(30, 0), vector2(10, 20), vector2(10, 10), 
+            vector2(-30, 10), vector2(-30, -10), vector2(10, -10), 
+            vector2(10, -20)]
+    player = vex_player(10, 10, Color(255, 255, 255), arrow_pts, 2)
+    shapes.append(player)
     while True:
         screen.fill(0)
         for e in pygame.event.get():
@@ -43,6 +44,32 @@ def main():
                     return
                 elif e.key == K_r:
                     del shapes[:]
+                elif e.key == K_w:
+                    #move up
+                    player.move_up = True
+                elif e.key == K_s:
+                    #move down
+                    player.move_down = True
+                elif e.key == K_a:
+                    #move left
+                    player.move_left = True
+                elif e.key == K_d:
+                    #move right
+                    player.move_right = True
+            elif e.type == KEYUP:
+                if e.key == K_w:
+                    #move up
+                    player.move_up = False
+                elif e.key == K_s:
+                    #move down
+                    player.move_down = False
+                elif e.key == K_a:
+                    #move left
+                    player.move_left = False
+                elif e.key == K_d:
+                    #move right
+                    player.move_right = False
+
             elif e.type == MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
                 if e.button == 1:
@@ -54,6 +81,8 @@ def main():
                 elif e.button == 3:
                     shapes.append(gen_shape(pos[0], pos[1]))
                 count += 1
+            elif e.type == MOUSEMOTION:
+                player.rotate(e.pos[0], e.pos[1]) 
         for s in shapes:
             if s.x < 0 or s.x > 800:
                 #shapes.remove(s)

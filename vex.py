@@ -13,10 +13,10 @@ class vex():
     def __str__(self):
         string = "Colour: %d, %d, %d" % (self.colour.r, self.colour.g, self.colour.b)
         #string = "Colour:", self.colour.r, self.colour.g, self.colour.b
-        #string = string + ("Position: %d, %d" % self.x, self.y)
-        #string = string + "Points:"
-        #for p in self.points:
-            #string = string + p
+        string = string + ("Position: %d, %d" % self.x, self.y)
+        string = string + "Points:"
+        for p in self.points:
+            string = string + p
         return string
 
 
@@ -28,6 +28,11 @@ class vex():
         self.yMod = -5
         self.x = x
         self.y = y
+        self.move_up = False
+        self.move_down = False
+        self.move_left = False
+        self.move_right = False
+        self.direction_vector = points[0]
         #print self.__str__()
 
     def draw(self, surface):
@@ -51,13 +56,38 @@ class vex():
         self.x += self.xMod
         self.y += self.yMod
         """
+        #for p in self.points:
+            #p.x += self.xMod
+            #p.y += self.yMod
+        #self.x += self.xMod
+        #self.y += self.yMod
+        #print"DERP"
+        if self.move_up:
+            self.move(0, -10)
+        elif self.move_down:
+            self.move(0, 10)
+        elif self.move_left:
+            self.move(-10, 0)
+        elif self.move_right:
+            self.move(10, 0)
+        
+    def rotate(self, x, y):
+        v = vector2(x, y)
+        # get angle between (x, y) and points[0]
+        # x = (x*cos(angle)) - (y*sin(angle))
+        # y = (y*cos(angle)) + (x*sin(angle))
+        #print self.points[0].angle_between(v) 
         for p in self.points:
-            p.x += self.xMod
-            p.y += self.yMod
-        self.x += self.xMod
-        self.y += self.yMod
-        #print"DERP"        
+            pass
+            
 
+    def move(self, x, y):
+        for p in self.points:
+            p.x += x
+            p.y += y
+        self.x += x
+        self.y += y
+    
     def get_points_tuple(self):
         pts = []
         for p in self.points:
