@@ -20,11 +20,11 @@ def gen_shape(x, y):
     col_b = randint(10, 255)
     colour = pygame.Color(col_r, col_g, col_b)
     for i in range(0, num_pts/2):
-         pts.append(vector2(randint(x-vex.radius, x+vex.radius), randint(y-vex.radius, y+vex.radius)))
+         pts.append(vector2(randint(-vex.radius, vex.radius), randint(-vex.radius, vex.radius)))
     pts_rev = pts[:]
     pts_rev.reverse()
     for i in pts_rev:
-        pts.append(vector2(x - i.x, y - i.y)+vector2(x,y))
+        pts.append(vector2(-i.x, -i.y))
     return vex(x, y, colour, pts, 2)
 
 def main():
@@ -34,7 +34,7 @@ def main():
     arrow_pts = [vector2(30, 0), vector2(10, 20), vector2(10, 10), 
             vector2(-30, 10), vector2(-30, -10), vector2(10, -10), 
             vector2(10, -20)]
-    player = vex_player(10, 10, Color(255, 255, 255), arrow_pts, 2)
+    player = vex_player(50, 50, Color(255, 255, 255), arrow_pts, 2)
     shapes.append(player)
     while True:
         screen.fill(0)
@@ -47,28 +47,44 @@ def main():
                 elif e.key == K_w:
                     #move up
                     player.move_up = True
+                    for i in shapes:
+                        i.move_up = True
                 elif e.key == K_s:
                     #move down
                     player.move_down = True
+                    for i in shapes:
+                        i.move_down = True
                 elif e.key == K_a:
                     #move left
                     player.move_left = True
+                    for i in shapes:
+                        i.move_left = True
                 elif e.key == K_d:
                     #move right
                     player.move_right = True
+                    for i in shapes:
+                        i.move_right = True
             elif e.type == KEYUP:
                 if e.key == K_w:
                     #move up
                     player.move_up = False
+                    for i in shapes:
+                        i.move_up = False
                 elif e.key == K_s:
                     #move down
                     player.move_down = False
+                    for i in shapes:
+                        i.move_down = False
                 elif e.key == K_a:
                     #move left
                     player.move_left = False
+                    for i in shapes:
+                        i.move_left = False
                 elif e.key == K_d:
                     #move right
                     player.move_right = False
+                    for i in shapes:
+                        i.move_right = False
 
             elif e.type == MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()

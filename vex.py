@@ -24,8 +24,6 @@ class vex():
         self.colour = colour
         self.points = points
         self.width = width
-        self.xMod = 5
-        self.yMod = -5
         self.x = x
         self.y = y
         self.move_up = False
@@ -36,9 +34,11 @@ class vex():
         #print self.__str__()
 
     def draw(self, surface):
-        pygame.draw.polygon(surface, self.colour, self.get_points_tuple(), self.width)
+        pygame.draw.polygon(surface, self.colour, 
+                self.get_absolute_points_tuple(), self.width)
 
     def update(self, surface): # surface => check collision with outer bounds
+        
         """
         if ((self.x < surface.get_width() and self.x > 0)
             and (self.y < surface.get_height() and self.y > 0)):
@@ -63,13 +63,13 @@ class vex():
         #self.y += self.yMod
         #print"DERP"
         if self.move_up:
-            self.move(0, -10)
+            self.move(0, -10, surface)
         elif self.move_down:
-            self.move(0, 10)
+            self.move(0, 10, surface)
         elif self.move_left:
-            self.move(-10, 0)
+            self.move(-10, 0, surface)
         elif self.move_right:
-            self.move(10, 0)
+            self.move(10, 0, surface)
         
     def rotate(self, x, y):
         v = vector2(x, y)
@@ -81,29 +81,51 @@ class vex():
             pass
             
 
-    def move(self, x, y):
-        for p in self.points:
-            p.x += x
-            p.y += y
-        self.x += x
-        self.y += y
-    
-    def get_points_tuple(self):
+    def move(self, x, y, surface): 
+        if ((self.x + x < surface.get_width() and self.x + x > 0)
+            and (self.y + y < surface.get_height() and self.y + y > 0)):
+            #for p in self.points:
+                #p.x += x
+                #p.y += y
+            self.x += x
+            self.y += y
+
+    def get_relative_points_tuple(self):
+        """
+        Returns a list of 2D points as tuples, relative to vex position.
+        """
         pts = []
         for p in self.points:
             pts.append((p.x, p.y))
         return pts
-
-    def get_relative_points(self):
+    
+    def get_absolute_points_tuple(self):
+        """
+        Returns a list of 2D points as tuples, relative to origin.
+        """
         pts = []
         for p in self.points:
-            pts.append(p.x - self.x, p.y - self.y)
+            pts.append((p.x+self.x, p.y+self.y))
         return pts
 
     def get_relative_points_vector2(self):
+        """
+        Returns a list of vector2 objects representing 2D points, relative 
+        to vex position.
+        """
         pts = []
         for p in self.points:
-            pts.append(vector2(p.x - self.x, p.y - self.y))
+            pts.append(vector2(p.x, p.y))
+        return pts
+
+    def get_absolute_points_vector2(self):
+        """
+        Returns a list of vector2 objects representing 2D points, relative 
+        to origin.
+        """
+        pts = []
+        for p in self.points:
+            pts.append(vector2(p.x+self.x, p.y+self.y))
         return pts
 
     def reproduce(self, v, x, y): # Factory method pattern?
@@ -157,21 +179,22 @@ class vex():
         colour = pygame.Color(col_r, col_g, col_b)
         # Grab points from both parents and generate random ones
         for i in xrange(0, num_pts/2):
-            if i % 5 == 0:
-                pt = vector2(randint(-self.radius, self.radius), randint(-self.radius, self.radius))
-                pts.append(pt + pos)
+            if i % 10 == 0:
+                pt = vector2(randint(-vex.radius, vex.radius), randint(-vex.radius, vex.radius))
+                pts.append(pt)
             elif i % 2 == 0:
                 if i < len(this_rel_pts):
-                    pts.append(this_rel_pts[i] + pos)
+                    pts.append(this_rel_pts[i])
                 else:
-                    pts.append(v_rel_pts[i] + pos)
+                    pts.append(v_rel_pts[i])
             else:
                 if i < len(v_rel_pts):
-                    pts.append(v_rel_pts[i] + pos)
+                    pts.append(v_rel_pts[i])
                 else:
-                    pts.append(this_rel_pts[i] + pos)
+                    pts.append(this_rel_pts[i])
         pts_rev = pts[:]
         pts_rev.reverse()
         for i in pts_rev:
-            pts.append(vector2(x - i.x, y - i.y) + pos)
+            pts.append(vector2(0-i.x, 0-i.y))
+            print pts[-1]
         return vex(x, y, colour, pts, 2)
