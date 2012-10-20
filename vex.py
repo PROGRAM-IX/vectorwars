@@ -128,6 +128,31 @@ class vex():
             pts.append(vector2(p.x+self.x, p.y+self.y))
         return pts
 
+    def rotate_3d_points(points, angle_x, angle_y, angle_z):
+        """
+        From nerdparadise.com/tech/python/pygame/basics/part4
+        """
+        new_points = []
+        for point in points:
+            x = point[0]
+            y = point[1]
+            new_y = y * math.cos(angle_x) - z * math.sin(angle_x)
+            new_z = y * math.sin(angle_x) + z * math.cos(angle_x)
+            y = new_y
+            # isn't math fun, kids? 
+            z = new_z
+            new_x = x * math.cos(angle_y) - z * math.sin(angle_y)
+            new_z = x * math.sin(angle_y) + z * math.cos(angle_y)
+            x = new_x
+            z = new_z
+            new_x = x * math.cos(angle_z) - y * math.sin(angle_z)
+            new_y = x * math.sin(angle_z) + y * math.cos(angle_z)
+            x = new_x
+            y = new_y
+            new_points.append((x, y))
+        return new_points
+    
+
     def reproduce(self, v, x, y): # Factory method pattern?
         pts = []
         num_pts = 0 # number of points in child 
@@ -179,8 +204,9 @@ class vex():
         colour = pygame.Color(col_r, col_g, col_b)
         # Grab points from both parents and generate random ones
         for i in xrange(0, num_pts/2):
-            if i % 10 == 0:
-                pt = vector2(randint(-vex.radius, vex.radius), randint(-vex.radius, vex.radius))
+            if i % 3 == 0:
+                pt = vector2(randint(-vex.radius, 0), 
+                        randint(-vex.radius, vex.radius))
                 pts.append(pt)
             elif i % 2 == 0:
                 if i < len(this_rel_pts):
@@ -195,6 +221,6 @@ class vex():
         pts_rev = pts[:]
         pts_rev.reverse()
         for i in pts_rev:
-            pts.append(vector2(0-i.x, 0-i.y))
-            print pts[-1]
+            pts.append(vector2(-i.x, i.y))
+            #print pts[-1]
         return vex(x, y, colour, pts, 2)
