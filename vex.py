@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 from vector2 import vector2
 from random import *
+import math
 
 def print_randint(a, b):
     num = randint(a, b)
@@ -70,16 +71,26 @@ class vex():
             self.move(-10, 0, surface)
         elif self.move_right:
             self.move(10, 0, surface)
-        
+    
+    #def clamp(self, x, a, b):
+        #return min(max(x, a), b)
+
     def rotate(self, x, y):
+        """Rotate the vex to face a point x, y"""
         v = vector2(x, y)
         # get angle between (x, y) and points[0]
         # x = (x*cos(angle)) - (y*sin(angle))
         # y = (y*cos(angle)) + (x*sin(angle))
         #print self.points[0].angle_between(v) 
-        for p in self.points:
-            pass
-            
+        a = self.direction_vector.radians_between(v)
+        print a
+        cos_a = math.cos(a)
+        sin_a = math.sin(a)
+        for i in self.points:
+            old_x = i.x 
+            old_y = i.y # preserve old values
+            i.x = (old_x*cos_a - old_y*sin_a)
+            i.y = (old_x*sin_a + old_y*cos_a)
 
     def move(self, x, y, surface): 
         if ((self.x + x < surface.get_width() and self.x + x > 0)
@@ -127,32 +138,7 @@ class vex():
         for p in self.points:
             pts.append(vector2(p.x+self.x, p.y+self.y))
         return pts
-
-    def rotate_3d_points(points, angle_x, angle_y, angle_z):
-        """
-        From nerdparadise.com/tech/python/pygame/basics/part4
-        """
-        new_points = []
-        for point in points:
-            x = point[0]
-            y = point[1]
-            new_y = y * math.cos(angle_x) - z * math.sin(angle_x)
-            new_z = y * math.sin(angle_x) + z * math.cos(angle_x)
-            y = new_y
-            # isn't math fun, kids? 
-            z = new_z
-            new_x = x * math.cos(angle_y) - z * math.sin(angle_y)
-            new_z = x * math.sin(angle_y) + z * math.cos(angle_y)
-            x = new_x
-            z = new_z
-            new_x = x * math.cos(angle_z) - y * math.sin(angle_z)
-            new_y = x * math.sin(angle_z) + y * math.cos(angle_z)
-            x = new_x
-            y = new_y
-            new_points.append((x, y))
-        return new_points
     
-
     def reproduce(self, v, x, y): # Factory method pattern?
         pts = []
         num_pts = 0 # number of points in child 

@@ -19,8 +19,9 @@ class vector2():
 
     def normalise(self):
         magnitude = self.get_magnitude()
-        self.x = magnitude/self.x
-        self.y = magnitude/self.y
+        if not self.x == 0 and not self.y == 0:
+            self.x = magnitude/self.x
+            self.y = magnitude/self.y
     
     # my dot product function
     def dot_product(self, other):
@@ -28,13 +29,24 @@ class vector2():
         # or A dot B = AxBx + AyBy + AzBz
         return self.x*other.x + self.y*other.y
 
-    def angle_between(self, other):
-        # cos(theta) = 1/(|A||B|)
-        #d = (1/(self.get_magnitude()*other.get_magnitude()))
-        #print d
-        #return math.acosh(d)
-        pass
+    @staticmethod
+    def clamp(x, a, b):
+        return min(max(x, a), b)
 
+    def radians_between(self, other):
+        #self.normalise()
+        #other.normalise()
+        #d_p = (self.clamp(self.dot_product(other), -1.0, 1.0))
+        d_p = (self.dot_product(other))
+        if (not self.get_magnitude() == 0 and 
+            not other.get_magnitude() == 0): 
+                cos_of_angle = d_p/(self.get_magnitude() * 
+                        other.get_magnitude())
+        else:
+            cos_of_angle = d_p
+        return math.acos(cos_of_angle)
+
+    
     def __add__(self, rhs): # rhs = right hand side of + operation
         return vector2(self.x + rhs.x, self.y + rhs.y)
 

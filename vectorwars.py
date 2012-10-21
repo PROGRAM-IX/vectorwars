@@ -14,7 +14,7 @@ clock = pygame.time.Clock()
 
 def gen_shape(x, y):
     pts = []
-    num_pts = randint(4, 20)
+    num_pts = randint(4, 50)
     col_r = randint(10, 255)
     col_g = randint(10, 255)
     col_b = randint(10, 255)
@@ -37,12 +37,15 @@ def main():
             vector2(10, -20)]
     player = vex_player(50, 50, Color(255, 255, 255), arrow_pts, 2)
     shapes.append(player)
+    rotate_done = False
     while True:
         screen.fill(0)
         for e in pygame.event.get():
             if e.type == KEYDOWN:
                 if e.key == K_q:
                     return
+                elif e.key == K_SPACE:
+                    rotate_done = False
                 elif e.key == K_r:
                     del shapes[:]
                 elif e.key == K_w:
@@ -82,8 +85,11 @@ def main():
                 elif e.button == 3:
                     shapes.append(gen_shape(pos[0], pos[1]))
                 count += 1
-            elif e.type == MOUSEMOTION:
-                player.rotate(e.pos[0], e.pos[1]) 
+            elif e.type == MOUSEMOTION and not rotate_done:
+                #player.rotate(e.pos[0], e.pos[1])
+                for sh in shapes:
+                    sh.rotate(e.pos[0], e.pos[1])
+                #rotate_done = True
         for s in shapes:
             if s.x < 0 or s.x > 800:
                 #shapes.remove(s)
