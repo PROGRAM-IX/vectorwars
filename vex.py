@@ -31,12 +31,20 @@ class vex():
         self.move_down = False
         self.move_left = False
         self.move_right = False
-        self.direction_vector = points[0]
+        #self.direction_vector = points[0]
+        print "Direction:", self.direction_vector()
         #print self.__str__()
+    
+    def direction_vector(self):
+        #print self.points[0] + vector2(self.x, self.y)
+        return self.points[0] + vector2(self.x, self.y)
 
     def draw(self, surface):
         pygame.draw.polygon(surface, self.colour, 
                 self.get_absolute_points_tuple(), self.width)
+        dir_v = self.direction_vector()
+        pygame.draw.aaline(surface, pygame.Color(255, 0, 0), 
+                (self.x, self.y), (dir_v.x, dir_v.y), 4)
 
     def update(self, surface): # surface => check collision with outer bounds
         
@@ -72,25 +80,47 @@ class vex():
         elif self.move_right:
             self.move(10, 0, surface)
     
-    #def clamp(self, x, a, b):
-        #return min(max(x, a), b)
+    @staticmethod
+    def clamp(x, a, b):
+        return min(max(x, a), b)
 
-    def rotate(self, x, y):
+    #def is_facing_point(self, x, y):
+
+
+    def rotate_to_face_point(self, x, y):
         """Rotate the vex to face a point x, y"""
-        v = vector2(x, y)
-        # get angle between (x, y) and points[0]
-        # x = (x*cos(angle)) - (y*sin(angle))
-        # y = (y*cos(angle)) + (x*sin(angle))
-        #print self.points[0].angle_between(v) 
-        a = self.direction_vector.radians_between(v)
-        print a
-        cos_a = math.cos(a)
-        sin_a = math.sin(a)
+        """
+        v = vector2(x, y) - vector2(self.direction_vector().x, 
+                self.direction_vector().y)
+        #a = self.direction_vector.radians_between(v)
+        a = math.atan2(x - self.direction_vector().y, 
+                y - self.direction_vector().x)
+        mine = vector2(self.direction_vector().x, self.direction_vector().y)
+        theirs = vector2(x, y)
+        mine.normalise()
+        theirs.normalise()
+        res = mine - theirs
+        print res
+        # checking to see would fuzzy values make it at least half accurate
+        #if (res.x < .6 and res.y < .6 and res.x > -.6 and res.y > -.6):
+        self.rotate_by_radians(a)
+        """
+        print self.direction_vector()
+        angle = math.atan2(y - self.direction_vector().y, 
+                x - self.direction_vector().x)
+        print "Degrees:", 180/math.pi * angle
+        print "Radians:", angle
+        self.rotate_by_radians(angle)
+
+    def rotate_by_radians(self, a):
+        """Rotate the shape by a given number of radians"""
+        cos_a = math.cos(a) # save these so we only need to do the 
+        sin_a = math.sin(a) # call once for each
         for i in self.points:
             old_x = i.x 
             old_y = i.y # preserve old values
-            i.x = (old_x*cos_a - old_y*sin_a)
-            i.y = (old_x*sin_a + old_y*cos_a)
+            i.x = (old_x*cos_a - old_y*sin_a) # use old values to calculate
+            i.y = (old_x*sin_a + old_y*cos_a) # new values
 
     def move(self, x, y, surface): 
         if ((self.x + x < surface.get_width() and self.x + x > 0)

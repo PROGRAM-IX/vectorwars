@@ -38,12 +38,16 @@ class vector2():
         #other.normalise()
         #d_p = (self.clamp(self.dot_product(other), -1.0, 1.0))
         d_p = (self.dot_product(other))
-        if (not self.get_magnitude() == 0 and 
-            not other.get_magnitude() == 0): 
-                cos_of_angle = d_p/(self.get_magnitude() * 
-                        other.get_magnitude())
+        if self.get_magnitude() == 0:
+            mag_self = 1
         else:
-            cos_of_angle = d_p
+            mag_self = self.get_magnitude()
+        if other.get_magnitude() == 0: 
+            mag_other = 1    
+        else:
+            mag_other = other.get_magnitude()
+        
+        cos_of_angle = d_p/(mag_self*mag_other)
         return math.acos(cos_of_angle)
 
     

@@ -6,6 +6,8 @@ from vector2 import vector2
 from vex import vex
 from player import vex_player
 
+import math
+
 screen = None
 shapes = []
 count = 0
@@ -14,7 +16,7 @@ clock = pygame.time.Clock()
 
 def gen_shape(x, y):
     pts = []
-    num_pts = randint(4, 50)
+    num_pts = randint(4, 10)
     col_r = randint(10, 255)
     col_g = randint(10, 255)
     col_b = randint(10, 255)
@@ -45,7 +47,7 @@ def main():
                 if e.key == K_q:
                     return
                 elif e.key == K_SPACE:
-                    rotate_done = False
+                    rotate_done = not rotate_done
                 elif e.key == K_r:
                     del shapes[:]
                 elif e.key == K_w:
@@ -60,6 +62,12 @@ def main():
                 elif e.key == K_d:
                     #move right
                     player.move_right = True
+                elif e.key == K_UP:
+                    #rotate 90deg
+                    player.rotate_by_radians(math.pi/2)
+                elif e.key == K_DOWN:
+                    #rotate -90deg
+                    player.rotate_by_radians(-math.pi/2)
             elif e.type == KEYUP:
                 if e.key == K_w:
                     #move up
@@ -88,7 +96,9 @@ def main():
             elif e.type == MOUSEMOTION and not rotate_done:
                 #player.rotate(e.pos[0], e.pos[1])
                 for sh in shapes:
-                    sh.rotate(e.pos[0], e.pos[1])
+                    sh.rotate_to_face_point(e.pos[0], e.pos[1])
+                    pygame.draw.aaline(screen, pygame.Color(0, 255, 0),
+                            (e.pos[0], e.pos[1]), (sh.x, sh.y), 2) 
                 #rotate_done = True
         for s in shapes:
             if s.x < 0 or s.x > 800:
