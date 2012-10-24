@@ -34,9 +34,9 @@ def main():
     global count, shapes, screen, clock
     screen = pygame.display.set_mode((800, 600))
     shapes = []
-    arrow_pts = [vector2(30, 0), vector2(10, 20), vector2(10, 10), 
-            vector2(-30, 10), vector2(-30, -10), vector2(10, -10), 
-            vector2(10, -20)]
+    arrow_pts = [vector2(60, 0), vector2(20, 40), vector2(20, 20), 
+            vector2(-60, 20), vector2(-60, -20), vector2(20, -20), 
+            vector2(20, -40)]
     player = vex_player(50, 50, Color(255, 255, 255), arrow_pts, 2)
     shapes.append(player)
     rotate_done = False
@@ -95,10 +95,17 @@ def main():
                 count += 1
             elif e.type == MOUSEMOTION and not rotate_done:
                 #player.rotate(e.pos[0], e.pos[1])
-                for sh in shapes:
+                for sh in [player]:
                     sh.rotate_to_face_point(e.pos[0], e.pos[1])
-                    pygame.draw.aaline(screen, pygame.Color(0, 255, 0),
+                    pygame.draw.line(screen, pygame.Color(0, 255, 0),
                             (e.pos[0], e.pos[1]), (sh.x, sh.y), 2) 
+                    pygame.draw.line(screen, pygame.Color(0, 0, 255),
+                            (sh.x, sh.y), (sh.direction_vector().x,
+                                sh.direction_vector().y), 1)
+                    pygame.draw.line(screen, pygame.Color(255, 255, 0),
+                            (sh.direction_vector().x, 
+                                sh.direction_vector().y), 
+                            (e.pos[0], e.pos[1]), 1)
                 #rotate_done = True
         for s in shapes:
             if s.x < 0 or s.x > 800:

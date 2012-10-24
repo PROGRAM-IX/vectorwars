@@ -32,12 +32,12 @@ class vex():
         self.move_left = False
         self.move_right = False
         #self.direction_vector = points[0]
-        print "Direction:", self.direction_vector()
+        #print "Direction:", self.direction_vector()
         #print self.__str__()
     
     def direction_vector(self):
         #print self.points[0] + vector2(self.x, self.y)
-        return self.points[0] + vector2(self.x, self.y)
+        return vector2(self.x+self.points[0].x, self.y+self.points[0].y)
 
     def draw(self, surface):
         pygame.draw.polygon(surface, self.colour, 
@@ -105,15 +105,36 @@ class vex():
         #if (res.x < .6 and res.y < .6 and res.x > -.6 and res.y > -.6):
         self.rotate_by_radians(a)
         """
-        print self.direction_vector()
-        angle = math.atan2(y - self.direction_vector().y, 
-                x - self.direction_vector().x)
-        print "Degrees:", 180/math.pi * angle
-        print "Radians:", angle
+        dir_v = self.direction_vector()
+        pt_v = dir_v + vector2(x, y) 
+        dir_v.normalise()
+        pt_v.normalise()
+        #print dir_v
+        print "----"
+        print "DP:", dir_v.dot_product(pt_v)
+        print dir_v, pt_v
+        print "|dir_v|:", dir_v.get_magnitude()
+        print "|pt_v|:", pt_v.get_magnitude()
+        angle = dir_v.radians_between(pt_v)
+        #angle = (dir_v.dot_product(pt_v) /
+        #        dir_v.get_magnitude() * pt_v.get_magnitude())
+        #angle = math.atan2(y - self.direction_vector().y, 
+        #        x - self.direction_vector().x)
+        if angle > math.pi*2: # make sure not to do too much rotation
+            while angle > math.pi*2: # bigger than 360?
+                angle = angle - math.pi*2 # cut it down to be less
+        if angle > math.pi: # bigger than 180?
+            angle = -(math.pi - angle) # reverse it and invert the value
+        print angle
+        print angle*(180/math.pi)
         self.rotate_by_radians(angle)
-
+    
     def rotate_by_radians(self, a):
         """Rotate the shape by a given number of radians"""
+        if a > 0:
+            print "Clockwise"
+        else:
+            print "Anticlockwise"
         cos_a = math.cos(a) # save these so we only need to do the 
         sin_a = math.sin(a) # call once for each
         for i in self.points:

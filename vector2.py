@@ -19,9 +19,8 @@ class vector2():
 
     def normalise(self):
         magnitude = self.get_magnitude()
-        if not self.x == 0 and not self.y == 0:
-            self.x = magnitude/self.x
-            self.y = magnitude/self.y
+        self.x = self.x * 1/magnitude
+        self.y = self.y * 1/magnitude
     
     # my dot product function
     def dot_product(self, other):
@@ -34,19 +33,14 @@ class vector2():
         return min(max(x, a), b)
 
     def radians_between(self, other):
-        #self.normalise()
-        #other.normalise()
+        own = vector2(self.x, self.y)
+        v = vector2(other.x, other.y)
+        own.normalise()
+        v.normalise()
         #d_p = (self.clamp(self.dot_product(other), -1.0, 1.0))
         d_p = (self.dot_product(other))
-        if self.get_magnitude() == 0:
-            mag_self = 1
-        else:
-            mag_self = self.get_magnitude()
-        if other.get_magnitude() == 0: 
-            mag_other = 1    
-        else:
-            mag_other = other.get_magnitude()
-        
+        mag_self = own.get_magnitude()
+        mag_other = v.get_magnitude()
         cos_of_angle = d_p/(mag_self*mag_other)
         return math.acos(cos_of_angle)
 
