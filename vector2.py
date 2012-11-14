@@ -17,10 +17,12 @@ class vector2():
     def get_magnitude(self):
         return math.sqrt(self.x**2 + self.y**2)
 
-    def normalise(self):
+    def normalised(self):
         magnitude = self.get_magnitude()
-        self.x = self.x * 1/magnitude
-        self.y = self.y * 1/magnitude
+        if not magnitude == 0:
+            return vector2(self.x * 1/magnitude, self.y * 1/magnitude)
+        else:
+            return vector2(self.x, self.y)
     
     # my dot product function
     def dot_product(self, other):

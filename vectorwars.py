@@ -8,6 +8,8 @@ from player import vex_player
 
 import math
 
+import figure
+
 screen = None
 shapes = []
 count = 0
@@ -16,7 +18,7 @@ clock = pygame.time.Clock()
 
 def gen_shape(x, y):
     pts = []
-    num_pts = randint(4, 10)
+    num_pts = randint(4, 20)
     col_r = randint(10, 255)
     col_g = randint(10, 255)
     col_b = randint(10, 255)
@@ -40,6 +42,8 @@ def main():
     player = vex_player(50, 50, Color(255, 255, 255), arrow_pts, 2)
     shapes.append(player)
     rotate_done = False
+    mousex = 400
+    mousey = 300
     while True:
         screen.fill(0)
         for e in pygame.event.get():
@@ -63,11 +67,11 @@ def main():
                     #move right
                     player.move_right = True
                 elif e.key == K_UP:
-                    #rotate 90deg
-                    player.rotate_by_radians(math.pi/2)
+                    #rotate 45deg
+                    player.rotate_by_radians(math.pi/4)
                 elif e.key == K_DOWN:
-                    #rotate -90deg
-                    player.rotate_by_radians(-math.pi/2)
+                    #rotate -45deg
+                    player.rotate_by_radians(-math.pi/4)
             elif e.type == KEYUP:
                 if e.key == K_w:
                     #move up
@@ -93,8 +97,15 @@ def main():
                 elif e.button == 3:
                     shapes.append(gen_shape(pos[0], pos[1]))
                 count += 1
-            elif e.type == MOUSEMOTION and not rotate_done:
-                #player.rotate(e.pos[0], e.pos[1])
+            #elif e.type == MOUSEMOTION and not rotate_done:
+            elif e.type == MOUSEMOTION:
+                mousex, mousey = e.pos
+                #if player_pos to dir_v is not facing player_pos to mouse_pos
+                #    rotate_done = False
+                #else
+                #    rotate_done = True
+                #print mousex, mousey
+                """#player.rotate(e.pos[0], e.pos[1])
                 for sh in [player]:
                     sh.rotate_to_face_point(e.pos[0], e.pos[1])
                     pygame.draw.line(screen, pygame.Color(0, 255, 0),
@@ -106,7 +117,21 @@ def main():
                             (sh.direction_vector().x, 
                                 sh.direction_vector().y), 
                             (e.pos[0], e.pos[1]), 1)
-                #rotate_done = True
+                #rotate_done = True"""
+                for sh in [player]:
+                    if not rotate_done:
+                        sh.rotate_to_face_point(mousex, mousey)
+                        rotate_done = True
+                        pygame.draw.line(screen, pygame.Color(0, 255, 0),
+                            (mousex, mousey), (sh.x, sh.y), 2) 
+                        pygame.draw.line(screen, pygame.Color(0, 0, 255),
+                            (sh.x, sh.y), (sh.dir_vec().x,
+                                sh.dir_vec().y), 1)
+                        pygame.draw.line(screen, pygame.Color(255, 255, 0),
+                            (sh.dir_vec().x, 
+                                sh.dir_vec().y), 
+                                    (mousex, mousey), 1)
+        figure.display(screen, 800, 600) # display x, y axis
         for s in shapes:
             if s.x < 0 or s.x > 800:
                 #shapes.remove(s)
@@ -117,7 +142,7 @@ def main():
             s.update(screen)
             s.draw(screen)
         pygame.display.update()
-        clock.tick(30)
+        clock.tick(10)
         
 if __name__ == "__main__":
     main()

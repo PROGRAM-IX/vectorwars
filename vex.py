@@ -31,18 +31,18 @@ class vex():
         self.move_down = False
         self.move_left = False
         self.move_right = False
-        #self.direction_vector = points[0]
-        #print "Direction:", self.direction_vector()
+        #self.dir_vec = points[0]
+        #print "Direction:", self.dir_vec()
         #print self.__str__()
     
-    def direction_vector(self):
+    def dir_vec(self):
         #print self.points[0] + vector2(self.x, self.y)
         return vector2(self.x+self.points[0].x, self.y+self.points[0].y)
 
     def draw(self, surface):
         pygame.draw.polygon(surface, self.colour, 
                 self.get_absolute_points_tuple(), self.width)
-        dir_v = self.direction_vector()
+        dir_v = self.dir_vec()
         pygame.draw.aaline(surface, pygame.Color(255, 0, 0), 
                 (self.x, self.y), (dir_v.x, dir_v.y), 4)
 
@@ -90,12 +90,12 @@ class vex():
     def rotate_to_face_point(self, x, y):
         """Rotate the vex to face a point x, y"""
         """
-        v = vector2(x, y) - vector2(self.direction_vector().x, 
-                self.direction_vector().y)
-        #a = self.direction_vector.radians_between(v)
-        a = math.atan2(x - self.direction_vector().y, 
-                y - self.direction_vector().x)
-        mine = vector2(self.direction_vector().x, self.direction_vector().y)
+        v = vector2(x, y) - vector2(self.dir_vec().x, 
+                self.dir_vec().y)
+        #a = self.dir_vec.radians_between(v)
+        a = math.atan2(x - self.dir_vec().y, 
+                y - self.dir_vec().x)
+        mine = vector2(self.dir_vec().x, self.dir_vec().y)
         theirs = vector2(x, y)
         mine.normalise()
         theirs.normalise()
@@ -105,7 +105,39 @@ class vex():
         #if (res.x < .6 and res.y < .6 and res.x > -.6 and res.y > -.6):
         self.rotate_by_radians(a)
         """
-        dir_v = self.direction_vector()
+        # NEW PLAN 13/11/12 (No idea if this is already what's there)
+        # Get angle between self.pos -> self.dir_v and self.pos -> point
+        # Change it to be <= 180
+        # Do rotation
+        
+        # Vector indicating direction 
+        dir_v = self.dir_vec().normalised()
+        # Vector from (x,y) to position
+        goal_v = vector2(x-self.x, y-self.y).normalised()
+        # Get dot product of two vectors
+        d_p = dir_v.dot_product(goal_v)
+        
+        print "Dir:", dir_v
+        print "Goal:", goal_v
+        print "Dot:", d_p
+        
+        
+        """
+        dir_v = self.dir_vec().normalised()
+        m_v = vector2(x, y).normalised()
+        #angle = math.fabs(math.atan(self.y-y/self.x - x) - math.pi/2)
+        
+        cos_angle = ((dir_v.x * m_v.x + dir_v.y * m_v.y)
+                / math.sqrt(dir_v.x*dir_v.x + dir_v.y*dir_v.y)
+                * math.sqrt(m_v.x*m_v.x + m_v.y * m_v.y))
+        angle = math.acos(cos_angle)
+        #angle = angle * 180/math.pi
+        if angle > math.pi:
+            print "Greater than 180. Flipping."
+            angle = -angle + math.pi
+        """
+        """
+        dir_v = self.dir_vec()
         pt_v = dir_v + vector2(x, y) 
         dir_v.normalise()
         pt_v.normalise()
@@ -118,23 +150,46 @@ class vex():
         angle = dir_v.radians_between(pt_v)
         #angle = (dir_v.dot_product(pt_v) /
         #        dir_v.get_magnitude() * pt_v.get_magnitude())
-        #angle = math.atan2(y - self.direction_vector().y, 
-        #        x - self.direction_vector().x)
+        #angle = math.atan2(y - self.dir_vec().y, 
+        #        x - self.dir_vec().x)
         if angle > math.pi*2: # make sure not to do too much rotation
             while angle > math.pi*2: # bigger than 360?
                 angle = angle - math.pi*2 # cut it down to be less
-        if angle > math.pi: # bigger than 180?
-            angle = -(math.pi - angle) # reverse it and invert the value
-        print angle
-        print angle*(180/math.pi)
+        elif angle < -(math.pi*2):
+            while angle < (-math.pi*2):
+                angle = angle + math.pi*2
+        #if angle > math.pi: # bigger than 180?
+            #angle = -(math.pi - angle) # reverse it and invert the value
+        #elif angle < -math.pi:
+            #angle = math.pi + angle
+        """
+        """
+        #print angle
+        #print angle*(180/math.pi)
+        dp = vector2(self.x-x, self.y-y).dot_product(self.dir_vec())
+        #print dp
+        print "Radians:", angle
+        print "Degrees:", angle * 180/math.pi
+        if angle*180/math.pi > 360 : # make sure not to do too much rotation
+            angle = angle % math.pi*2
+            print "Angle:", angle
+        #if angle > math.pi: # bigger than 180?
+            #angle = -(math.pi - angle) # reverse it and invert the value
+        #elif angle < -math.pi:
+            #angle = math.pi + angle
+        #print math.atan2(dir_v.y, dir_v.x) * 180*math.pi
+        #if(dp > 0):
         self.rotate_by_radians(angle)
-    
+        #if angle < .6 and angle > -.6:
+        #    pass
+        #if angle > .2:
+        #    self.rotate_by_radians(math.pi/6)
+        #elif angle < -.2:
+        #    self.rotate_by_radians(-math.pi/6)
+        """
+        
     def rotate_by_radians(self, a):
         """Rotate the shape by a given number of radians"""
-        if a > 0:
-            print "Clockwise"
-        else:
-            print "Anticlockwise"
         cos_a = math.cos(a) # save these so we only need to do the 
         sin_a = math.sin(a) # call once for each
         for i in self.points:
@@ -142,6 +197,7 @@ class vex():
             old_y = i.y # preserve old values
             i.x = (old_x*cos_a - old_y*sin_a) # use old values to calculate
             i.y = (old_x*sin_a + old_y*cos_a) # new values
+        #print "Finished rotating"
 
     def move(self, x, y, surface): 
         if ((self.x + x < surface.get_width() and self.x + x > 0)

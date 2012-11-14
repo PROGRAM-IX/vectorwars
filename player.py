@@ -1,5 +1,3 @@
-import pygame
-from pygame.locals import *
 from vex import vex
 
 class vex_player(vex):
