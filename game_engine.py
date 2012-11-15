@@ -38,7 +38,13 @@ class game_engine:
         self._hud.add(hud_line("Line1", pygame.Color(255, 0, 255), 
                                ((100, 100), (700, 100), 4)))
         self._hud.add(hud_text("A1", pygame.Color(255, 255, 0), 
-                               "aaaaa", (400, 300), 1))
+                               "abcdefghijk", (400, 300), 1, 2))
+        self._hud.add(hud_text("A2", pygame.Color(255, 255, 0), 
+                               "lmnopqrs", (400, 350), 1, 2))
+        self._hud.add(hud_text("A2", pygame.Color(255, 255, 0), 
+                               "tuvwxyz", (400, 400), 1, 2))
+        self._hud.add(hud_text("A2", pygame.Color(255, 255, 0), 
+                               "0123456789", (400, 450), 1, 2))
         while True:
             self.update()
             self.draw()
