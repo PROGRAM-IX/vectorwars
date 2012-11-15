@@ -10,3 +10,4 @@ class draw_engine:
         method, and draws all of them to screen."""
         for d in drawables:
             d.draw(self.screen)
+            print "Drawing", d

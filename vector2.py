@@ -29,7 +29,10 @@ class vector2():
         # A dot B = A B cos theta = |A||B| cos theta
         # or A dot B = AxBx + AyBy + AzBz
         return self.x*other.x + self.y*other.y
-
+    
+    def cross_product(self, other):
+        return self.x * other.y - self.y * other.x 
+    
     @staticmethod
     def clamp(x, a, b):
         return min(max(x, a), b)

@@ -24,10 +24,13 @@ def gen_shape(x, y):
     col_b = randint(10, 255)
     colour = pygame.Color(col_r, col_g, col_b)
     for i in range(0, num_pts/2):
-         pts.append(vector2(randint(-vex.radius, 0), 
+        pts.append(vector2(randint(-vex.radius, 0), 
              randint(-vex.radius, vex.radius)))
+    # Duplicate the list
     pts_rev = pts[:]
+    # Reverse the new list
     pts_rev.reverse()
+    # Copy the horizontally-inverted points into the array
     for i in pts_rev:
         pts.append(vector2(-i.x, i.y))
     return vex(x, y, colour, pts, 2)
@@ -100,6 +103,7 @@ def main():
             #elif e.type == MOUSEMOTION and not rotate_done:
             elif e.type == MOUSEMOTION:
                 mousex, mousey = e.pos
+            if not rotate_done:
                 #if player_pos to dir_v is not facing player_pos to mouse_pos
                 #    rotate_done = False
                 #else
@@ -121,16 +125,12 @@ def main():
                 for sh in [player]:
                     if not rotate_done:
                         sh.rotate_to_face_point(mousex, mousey)
-                        rotate_done = True
+                        #rotate_done = True
                         pygame.draw.line(screen, pygame.Color(0, 255, 0),
                             (mousex, mousey), (sh.x, sh.y), 2) 
-                        pygame.draw.line(screen, pygame.Color(0, 0, 255),
-                            (sh.x, sh.y), (sh.dir_vec().x,
-                                sh.dir_vec().y), 1)
                         pygame.draw.line(screen, pygame.Color(255, 255, 0),
-                            (sh.dir_vec().x, 
-                                sh.dir_vec().y), 
-                                    (mousex, mousey), 1)
+                            (sh.dir_vec().x, sh.dir_vec().y), 
+                                (mousex, mousey), 1)
         figure.display(screen, 800, 600) # display x, y axis
         for s in shapes:
             if s.x < 0 or s.x > 800:
@@ -146,4 +146,5 @@ def main():
         
 if __name__ == "__main__":
     main()
+    pygame.quit()
     print count

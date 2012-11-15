@@ -1,5 +1,6 @@
 import pygame
 from pygame.locals import *
+import copy
 
 class hud_element:
     def __init__(self, label, colour):
@@ -15,18 +16,51 @@ class hud_element:
         pass
 
 class hud_text(hud_element):
-    def __init(self, label, colour, text):
+    
+    letters = {
+       'a': ((-5, -10), (-5, 15), (-5, -5), (5, -5), (5, 15),
+             (5, -10), (-5, -10))
+       
+       }
+    def __init__(self, label, colour, text, pos, size):
         """
         label: description of the element
         colour: colour of the element (pygame.Colour)
         text: text portion ofthe element 
+        pos: coordinates of element
         """
+        
         hud_element.__init__(self, label, colour)
         self.text = text
+        self.pos = pos
+        self.size = size
         
     def draw(self, screen):
         """Render the text to the screen"""
-        pass
+        c_pos = self.pos
+        for letter in xrange(len(self.text)):
+            if self.text[letter] in self.letters:
+                a = self.letters[self.text[letter]]
+                last = a[0]
+                for pt in a:
+                    pygame.draw.line(screen, self.colour, 
+                                     (last[0]*self.size+c_pos[0], 
+                                        last[1]*self.size+c_pos[1]), 
+                                     (pt[0]*self.size+c_pos[0],
+                                        pt[1]*self.size+c_pos[1]),
+                                     1)
+                    last = pt
+            
+                """pts = copy.deepcopy(self.letters[self.text[a]])
+                for p in pts:
+                    p = ((p[0]*self.size)+self.pos[0], 
+                         (p[1]*self.size)+self.pos[1])
+                    print p
+                pygame.draw.polygon(screen, self.colour, pts, 1)
+                """
+                print "DRAWING",self.text[letter]
+            c_pos = (c_pos[0] + self.size * 15, c_pos[1])
+
 
 class hud_line(hud_element):
     def __init__(self, label, colour, line):
@@ -42,7 +76,7 @@ class hud_line(hud_element):
     def draw(self, screen):
         """Render the line to the screen"""
         pygame.draw.line(screen, self.colour, self.line[0], self.line[1], 
-                         self.width)
+                         self.line[-1])
         
 class hud_polygon(hud_element):
     def __init__(self, label, colour, lines):

@@ -116,11 +116,22 @@ class vex():
         goal_v = vector2(x-self.x, y-self.y).normalised()
         # Get dot product of two vectors
         d_p = dir_v.dot_product(goal_v)
-        
+        # Get cross product of two vectors
+        c_p = dir_v.cross_product(goal_v)
+        # Use acos to get the angle 
+        angle = math.acos(d_p/(dir_v.get_magnitude() * goal_v.get_magnitude()))        
         print "Dir:", dir_v
         print "Goal:", goal_v
+        print self.x, self.y
+        print x, y  
         print "Dot:", d_p
-        
+        print "Cross:", c_p
+        print "Angle (rad):", angle
+        print "Angle (deg)", angle * 180/math.pi
+        angle -= 33.1 / 180/math.pi
+        print "Modified angle (rad)", angle
+        print "Modified angle (deg)", angle * 180/math.pi
+        self.rotate_by_radians(angle)
         
         """
         dir_v = self.dir_vec().normalised()
