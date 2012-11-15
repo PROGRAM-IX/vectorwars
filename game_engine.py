@@ -31,7 +31,7 @@ class game_engine:
         self.clock.tick(30)
             
     def draw(self):
-        self.draw_e.begin_draw(pygame.Colour(0,0,0))
+        self.draw_e.begin_draw(pygame.Color(0,0,0))
         self.draw_e.draw(self.enemies)
         self.draw_e.draw([self._hud])
         self.draw_e.end_draw()
