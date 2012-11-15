@@ -11,3 +11,9 @@ class draw_engine:
         for d in drawables:
             d.draw(self.screen)
             #print "Drawing", d
+            
+    def begin_draw(self, colour):
+        self.screen.fill(colour)
+        
+    def end_draw(self):
+        pygame.display.update()

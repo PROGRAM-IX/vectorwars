@@ -3,9 +3,9 @@ from pygame.locals import *
 
 class input_engine:
     def __init__(self):
-        self.keys = [0] * 256
+        self.keys = [0] * 1024
         self.mouse_pos = (0,0)
-        self.mouse_buttons = [0] * 256
+        self.mouse_buttons = [0] * 16
     
     def mouse_motion(self, event):
         self.mouse_pos = event.pos

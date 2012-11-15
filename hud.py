@@ -150,3 +150,10 @@ class hud:
         for e in self.elements:
             e.draw(screen)
             
+    def get(self, id):
+        """Returns a hud_element with matching id from elements, otherwise
+        returns None"""
+        for e in self.elements:
+            if e.label == id:
+                return e
+        return None
