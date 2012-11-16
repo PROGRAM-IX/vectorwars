@@ -16,24 +16,7 @@ count = 0
 
 clock = pygame.time.Clock()
 
-def gen_shape(x, y):
-    pts = []
-    num_pts = randint(4, 20)
-    col_r = randint(10, 255)
-    col_g = randint(10, 255)
-    col_b = randint(10, 255)
-    colour = pygame.Color(col_r, col_g, col_b)
-    for i in range(0, num_pts/2):
-        pts.append(vector2(randint(-vex.radius, 0), 
-             randint(-vex.radius, vex.radius)))
-    # Duplicate the list
-    pts_rev = pts[:]
-    # Reverse the new list
-    pts_rev.reverse()
-    # Copy the horizontally-inverted points into the array
-    for i in pts_rev:
-        pts.append(vector2(-i.x, i.y))
-    return vex(x, y, colour, pts, 2)
+
 
 def main():
     global count, shapes, screen, clock
@@ -96,9 +79,9 @@ def main():
                         shapes.append(shapes[-1].reproduce(shapes[-2], 
                             pos[0], pos[1]))
                     else:           
-                        shapes.append(gen_shape(pos[0], pos[1]))
+                        shapes.append(gen(pos[0], pos[1]))
                 elif e.button == 3:
-                    shapes.append(gen_shape(pos[0], pos[1]))
+                    shapes.append(gen(pos[0], pos[1]))
                 count += 1
             #elif e.type == MOUSEMOTION and not rotate_done:
             elif e.type == MOUSEMOTION:

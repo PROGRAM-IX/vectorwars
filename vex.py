@@ -42,9 +42,9 @@ class vex():
     def draw(self, surface):
         pygame.draw.polygon(surface, self.colour, 
                 self.get_absolute_points_tuple(), self.width)
-        dir_v = self.dir_vec()
-        pygame.draw.aaline(surface, pygame.Color(255, 0, 0), 
-                (self.x, self.y), (dir_v.x, dir_v.y), 4)
+        #dir_v = self.dir_vec()
+        #pygame.draw.aaline(surface, pygame.Color(255, 0, 0), 
+                #(self.x, self.y), (dir_v.x, dir_v.y), 4)
 
     def update(self, surface): # surface => check collision with outer bounds
         
@@ -328,3 +328,48 @@ class vex():
             pts.append(vector2(-i.x, i.y))
             #print pts[-1]
         return vex(x, y, colour, pts, 2)
+    
+    def point_inside(self, v):
+        """Determines roughly if a given point is inside the vex"""
+        max_x = self.points[0].x
+        max_y = self.points[0].x
+        min_x = max_x
+        min_y = max_y
+        for i in self.points:
+            if i.x > max_x:
+                max_x = i.x
+            elif i.x < min_x:
+                min_x = i.x
+            if i.y > max_y:
+                max_y = i.y
+            elif i.y < min_y:
+                min_y = i.y
+        max_x = max_x + self.x
+        max_y = max_y + self.y
+        min_x = min_x + self.x
+        min_y = min_y + self.y
+        
+        if v.x < max_x and v.y < max_y and v.x > min_x and v.y > min_y:
+            return True
+            print "COLLIDE"
+        else:
+            return False
+    
+def gen(x, y):
+    pts = []
+    num_pts = randint(4, 20)
+    col_r = randint(10, 255)
+    col_g = randint(10, 255)
+    col_b = randint(10, 255)
+    colour = pygame.Color(col_r, col_g, col_b)
+    for i in range(0, num_pts/2):
+        pts.append(vector2(randint(-vex.radius, 0), 
+             randint(-vex.radius, vex.radius)))
+    # Duplicate the list
+    pts_rev = pts[:]
+    # Reverse the new list
+    pts_rev.reverse()
+    # Copy the horizontally-inverted points into the array
+    for i in pts_rev:
+        pts.append(vector2(-i.x, i.y))
+    return vex(x, y, colour, pts, 2)
