@@ -3,7 +3,7 @@ from pygame.locals import *
 from random import *
 
 from vector2 import vector2
-from vex import vex
+from vex import *
 from player import vex_player
 
 import math

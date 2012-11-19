@@ -23,8 +23,8 @@ class game_engine:
         self.clock = pygame.time.Clock()
         self._hud = hud()
         self.player = vex(400, 300, pygame.Color(0, 255, 0), 
-                          [vector2(0, -30), vector2(30, 0), vector2(0, 30), 
-                           vector2(-30, 0)], 3)
+                          [vector2(0, -20), vector2(20, 0), vector2(0, 20), 
+                           vector2(-20, 0)], 5)
         self.enemies = []
         self.bullets = []
         self.score = 100
@@ -39,6 +39,14 @@ class game_engine:
             y = randint(100, 500)
             self.enemies.append(gen(x, y))    
         
+
+    def reset_game(self):
+        del self.enemies
+        self.enemies = []
+        del self.bullets
+        self.bullets = []
+        self.spawn(2)
+
     def update(self):
         self.event_e.update()
         if self.event_e.input.keys[K_ESCAPE]==True:
@@ -46,50 +54,39 @@ class game_engine:
         if self.event_e.input.keys[K_SPACE]==True:
             self.score_inc(5)
         if self.event_e.input.keys[K_c] == True:
-            del self.enemies
-            self.enemies = []
-            del self.bullets
-            self.bullets = []
-            self.spawn(2)
+            self.reset_game()
         if self.event_e.input.keys[K_DOWN] == True:
             # Fire down
-            self.bullets.append(bullet(self.player.x, self.player.y, 0))
-            pass
+            self.player_shoot(0)
         elif self.event_e.input.keys[K_UP] == True:
             # Fire up
-            self.bullets.append(bullet(self.player.x, self.player.y, 2))
-            pass        
+            self.player_shoot(2)
         elif self.event_e.input.keys[K_LEFT] == True:
-            # Fire left
-            self.bullets.append(bullet(self.player.x, self.player.y, 3))
-            pass
+            # Fire left            
+            self.player_shoot(3)
         elif self.event_e.input.keys[K_RIGHT] == True:
             # Fire right
-            self.bullets.append(bullet(self.player.x, self.player.y, 1))
-            pass
+            self.player_shoot(1)
         
         if self.event_e.input.keys[K_w] == True:
             # Move up
-            self.player.y -= 10
+            self.player.y -= 5
             pass
         elif self.event_e.input.keys[K_s] == True:
             # Move down
-            self.player.y += 10
+            self.player.y += 5
             pass
         
         if self.event_e.input.keys[K_a] == True:
             # Move left
-            self.player.x -= 10
+            self.player.x -= 5
             pass
         elif self.event_e.input.keys[K_d] == True:
             # Move right
-            self.player.x += 10
+            self.player.x += 5
             pass
         
-        for b in self.bullets:
-            if b.x > 700 or b.x < 100 or b.y > 500 or b.y < 100:
-                self.bullets.remove(b)
-            b.move()
+        self.bullet_update()
         
         
         if len(self.enemies) is not 0:
@@ -107,13 +104,22 @@ class game_engine:
             sc.text = "score "+str(self.score)
             
     def collide(self):
+        dead_enemies = []
+        dead_bullets = []
         for e in self.enemies:
             for b in self.bullets:
                 if e.point_inside(vector2(b.x, b.y)): 
                     #print "COLLIDE2"       
                     self.score_inc(len(e.points))
-                    self.enemies.remove(e)
-                    self.bullets.remove(b)
+                    if e not in dead_enemies:
+                        dead_enemies.append(e)
+                    if b not in dead_bullets:
+                        dead_bullets.append(b)
+                    
+        for e in dead_enemies:
+            self.enemies.remove(e)
+        for b in dead_bullets:
+            self.bullets.remove(b)
                     
     def draw(self):
         self.draw_e.begin_draw(pygame.Color(0,0,0))
@@ -163,3 +169,15 @@ class game_engine:
                 self.enemies[p1].reproduce(self.enemies[p2], x, y))
         self.rep_count += 1
         #print self.rep_count
+
+    def bullet_update(self):
+        for b in self.bullets:
+            if b.x > 700 or b.x < 100 or b.y > 500 or b.y < 100:
+                self.bullets.remove(b)
+            b.move()
+
+    def player_shoot(self, dir):
+        return self.bullets.append(bullet(self.player.x, self.player.y, dir))
+
+
+        

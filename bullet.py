@@ -9,19 +9,19 @@ class bullet(vex):
     def __init__(self, x, y, dir):
         if dir == 0:
             vex.__init__(self, x, y, Color(0, 255, 0),
-                     [vector2(0, 10), vector2(5, -10), vector2(-5, -10)], 
+                     [vector2(0, 5), vector2(2, -5), vector2(-2, -5)], 
                      1)
         if dir == 1:
             vex.__init__(self, x, y, Color(0, 255, 0),
-                     [vector2(10, 0), vector2(-10, -5), vector2(-10, 5)], 
+                     [vector2(5, 0), vector2(-5, -2), vector2(-5, 2)], 
                      1)
         if dir == 2:
             vex.__init__(self, x, y, Color(0, 255, 0),
-                     [vector2(0, -10), vector2(5, 10), vector2(-5, 10)], 
+                     [vector2(0, -5), vector2(2, 5), vector2(-2, 5)], 
                      1)
         if dir == 3:
             vex.__init__(self, x, y, Color(0, 255, 0),
-                     [vector2(-10, 0), vector2(10, -5), vector2(10, 5)], 
+                     [vector2(-5, 0), vector2(5, -2), vector2(5, 2)], 
                      1)
             
         if dir == 0:
