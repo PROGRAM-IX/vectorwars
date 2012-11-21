@@ -28,7 +28,7 @@ class game_engine:
         self.enemies = []
         self.bullets = []
         self.score = 100
-        self.rep_interval = 60
+        self.rep_interval = 600
         self.rep_count = 1
         
         
@@ -39,7 +39,6 @@ class game_engine:
             y = randint(100, 500)
             self.enemies.append(gen(x, y))    
         
-
     def reset_game(self):
         del self.enemies
         self.enemies = []
@@ -167,6 +166,8 @@ class game_engine:
                 y = randint(self.enemies[p2].y, self.enemies[p1].y)
             self.enemies.append(
                 self.enemies[p1].reproduce(self.enemies[p2], x, y))
+        elif len(self.enemies) < 2:
+            self.spawn(2)
         self.rep_count += 1
         #print self.rep_count
 
