@@ -128,6 +128,9 @@ class vex():
         print "Cross:", c_p
         print "Angle (rad):", angle
         print "Angle (deg)", angle * 180/math.pi
+        # HACK ALERT - seems there is a 33deg difference in everything
+        # Hence this line
+        # Still doesn't fix things
         angle -= 33.1 / 180/math.pi
         print "Modified angle (rad)", angle
         print "Modified angle (deg)", angle * 180/math.pi

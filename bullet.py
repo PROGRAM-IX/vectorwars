@@ -2,10 +2,12 @@ import pygame
 from pygame.locals import *
 
 import vex
+import math
 from vector2 import vector2
 from vex import vex
 
-class bullet(vex):
+class bullet_d(vex):
+    """Bullet that flies in one of the four cardinal directions"""
     def __init__(self, x, y, dir):
         if dir == 0:
             vex.__init__(self, x, y, Color(0, 255, 0),
@@ -38,6 +40,33 @@ class bullet(vex):
             self.y_mod = 0
         self.dir = dir
         
+    def move(self):
+        self.x += self.x_mod
+        self.y += self.y_mod
+        
+class bullet_p(vex):
+    """Bullet that moves towards a point"""
+    def __init__(self, x, y, p):
+        """Create new bullet"""
+        vex.__init__(self, x, y, Color(0, 255, 0),
+                 [vector2(0, 5), vector2(2, -5), vector2(-2, -5)], 1)
+        direction = self.dir_vec()
+        point = p
+        #print self.dir_vec().normalised()
+        print "---------"
+        v = direction - p
+        print v
+        angle = math.atan2(v.x, v.y)
+        self.rotate_by_radians(angle)
+        direction = self.dir_vec().normalised()
+
+        print self.dir_vec()
+        print self.points[0]
+        print direction.x, direction.y
+        print "---------"
+        self.x_mod = self.points[0].x * 15
+        self.y_mod = self.points[0].y * 15
+    
     def move(self):
         self.x += self.x_mod
         self.y += self.y_mod

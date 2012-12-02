@@ -6,7 +6,7 @@ import random
 
 
 from vex import *
-from bullet import bullet
+from bullet import bullet_d, bullet_p
 from vector2 import vector2
 
 from input_engine import input_engine
@@ -56,16 +56,20 @@ class game_engine:
             self.reset_game()
         if self.event_e.input.keys[K_DOWN] == True:
             # Fire down
-            self.player_shoot(0)
+            self.player_shoot_dir(0)
         elif self.event_e.input.keys[K_UP] == True:
             # Fire up
-            self.player_shoot(2)
+            self.player_shoot_dir(2)
         elif self.event_e.input.keys[K_LEFT] == True:
             # Fire left            
-            self.player_shoot(3)
+            self.player_shoot_dir(3)
         elif self.event_e.input.keys[K_RIGHT] == True:
             # Fire right
-            self.player_shoot(1)
+            self.player_shoot_dir(1)
+        elif self.event_e.input.mouse_buttons[1] == True:
+            # Fire towards the mouse cursor
+            self.player_shoot_point(vector2(self.event_e.input.mouse_pos[0],
+                                    self.event_e.input.mouse_pos[1]))
         
         if self.event_e.input.keys[K_w] == True:
             # Move up
@@ -177,8 +181,11 @@ class game_engine:
                 self.bullets.remove(b)
             b.move()
 
-    def player_shoot(self, dir):
-        return self.bullets.append(bullet(self.player.x, self.player.y, dir))
+    def player_shoot_dir(self, direction):
+        self.bullets.append(bullet_d(self.player.x, self.player.y, direction))
 
-
+    def player_shoot_point(self, point):
+        b = bullet_p(self.player.x, self.player.y, point)
+        self.bullets.append(b)
+        #print (b)
         
