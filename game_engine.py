@@ -28,10 +28,10 @@ class game_engine:
         self.enemies = []
         self.bullets = []
         self.score = 100
-        self.rep_interval = 600
+        self.rep_interval = 200
         self.rep_count = 1
-        
-        
+        self.shoot_interval = 3
+        self.shoot_count = 0
         
     def spawn(self, num):
         for i in xrange(num):
@@ -70,6 +70,8 @@ class game_engine:
             # Fire towards the mouse cursor
             self.player_shoot_point(vector2(self.event_e.input.mouse_pos[0],
                                     self.event_e.input.mouse_pos[1]))
+        else:
+            self.shoot_count = 0
         
         if self.event_e.input.keys[K_w] == True:
             # Move up
@@ -182,10 +184,13 @@ class game_engine:
             b.move()
 
     def player_shoot_dir(self, direction):
-        self.bullets.append(bullet_d(self.player.x, self.player.y, direction))
+        if self.shoot_count % self.shoot_interval == 0:
+            b = bullet_d(self.player.x, self.player.y, direction)
+            self.bullets.append(b)
+        self.shoot_count += 1
 
     def player_shoot_point(self, point):
-        b = bullet_p(self.player.x, self.player.y, point)
-        self.bullets.append(b)
-        #print (b)
-        
+        if self.shoot_count % self.shoot_interval == 0:
+            b = bullet_p(self.player.x, self.player.y, point)
+            self.bullets.append(b)
+        self.shoot_count += 1
