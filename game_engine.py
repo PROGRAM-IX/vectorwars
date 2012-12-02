@@ -2,12 +2,15 @@ import pygame
 from pygame.locals import *
 from hud import *
 
-import random
+from behaviour_engine import BehaviourEngine
 
+from random import randint
 
-from vex import *
+from vex import vex
+from enemy import Enemy, gen
 from bullet import bullet_d, bullet_p
 from vector2 import vector2
+from player import player
 
 from input_engine import input_engine
 from event_engine import event_engine
@@ -21,10 +24,10 @@ class game_engine:
         self.screen = screen
         self.event_e = event_engine(i_e)
         self.draw_e = draw_engine(screen)
-        #self.beh_e = behaviour_engine()
+        self.beh_e = BehaviourEngine()
         self.clock = pygame.time.Clock()
         self._hud = hud()
-        self.player = vex(400, 300, pygame.Color(0, 255, 0), 
+        self.player = player(400, 300, pygame.Color(0, 255, 0), 
                           [vector2(0, -20), vector2(20, 0), vector2(0, 20), 
                            vector2(-20, 0)], 5)
         self.enemies = []
@@ -54,9 +57,9 @@ class game_engine:
         p_move_y = 0 # How much the player will move (V)
         
         self.event_e.update()
-        if self.event_e.input.keys[K_ESCAPE]==True:
+        if self.event_e.input.keys[K_ESCAPE] == True:
             raise SystemExit
-        if self.event_e.input.keys[K_SPACE]==True:
+        if self.event_e.input.keys[K_SPACE] == True:
             self.score_inc(5)
         if self.event_e.input.keys[K_c] == True:
             self.reset_game()
@@ -95,6 +98,8 @@ class game_engine:
             # Move right
             p_move_x += self.player_speed
         
+        self.beh_e.update(self.enemies, self.player, self.screen)
+        
         self.player.move(p_move_x, p_move_y, self.screen)
         
         self.bullet_update()
@@ -105,6 +110,8 @@ class game_engine:
             self.collide()
         else:
             self.spawn(4)
+        
+        
         
         self.clock.tick(self.FPS)
             
