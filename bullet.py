@@ -53,19 +53,20 @@ class bullet_p(vex):
         direction = self.dir_vec()
         point = p
         #print self.dir_vec().normalised()
-        print "---------"
-        v = direction - p
-        print v
+        #print "---------"
+        v = p - direction
         angle = math.atan2(v.x, v.y)
-        self.rotate_by_radians(angle)
+        # Fail to negate this, bullets spawn directly opposite point
+        self.rotate_by_radians(-angle) 
         direction = self.dir_vec().normalised()
 
-        print self.dir_vec()
-        print self.points[0]
-        print direction.x, direction.y
-        print "---------"
-        self.x_mod = self.points[0].x * 15
-        self.y_mod = self.points[0].y * 15
+        #print self.dir_vec()
+        #print self.points[0]
+        #print direction.x, direction.y
+        #print "---------"
+
+        self.x_mod = v.normalised().x * 15
+        self.y_mod = v.normalised().y * 15
     
     def move(self):
         self.x += self.x_mod
