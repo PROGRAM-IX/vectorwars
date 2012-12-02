@@ -214,13 +214,17 @@ class vex():
         #print "Finished rotating"
 
     def move(self, x, y, surface): 
-        if ((self.x + x < surface.get_width() and self.x + x > 0)
-            and (self.y + y < surface.get_height() and self.y + y > 0)):
-            #for p in self.points:
-                #p.x += x
-                #p.y += y
-            self.x += x
-            self.y += y
+        if abs(x) > 0 or abs(y) > 0:
+            if abs(x) > 0 and abs(y) > 0:
+                x = x * .707
+                y = y * .707
+            if ((self.x + x < surface.get_width() and self.x + x > 0)
+                and (self.y + y < surface.get_height() and self.y + y > 0)):
+                #for p in self.points:
+                    #p.x += x
+                    #p.y += y
+                self.x += x
+                self.y += y
 
     def get_relative_points_tuple(self):
         """

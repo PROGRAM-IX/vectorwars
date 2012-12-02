@@ -16,7 +16,9 @@ from draw_engine import draw_engine
 
 class game_engine:
     def __init__(self, screen):
+        self.FPS = 60
         i_e = input_engine()
+        self.screen = screen
         self.event_e = event_engine(i_e)
         self.draw_e = draw_engine(screen)
         #self.beh_e = behaviour_engine()
@@ -30,8 +32,9 @@ class game_engine:
         self.score = 100
         self.rep_interval = 200
         self.rep_count = 1
-        self.shoot_interval = 3
+        self.shoot_interval = self.FPS/10
         self.shoot_count = 0
+        self.player_speed = 5
         
     def spawn(self, num):
         for i in xrange(num):
@@ -47,6 +50,9 @@ class game_engine:
         self.spawn(2)
 
     def update(self):
+        p_move_x = 0 # How much the player will move (H)
+        p_move_y = 0 # How much the player will move (V)
+        
         self.event_e.update()
         if self.event_e.input.keys[K_ESCAPE]==True:
             raise SystemExit
@@ -75,21 +81,21 @@ class game_engine:
         
         if self.event_e.input.keys[K_w] == True:
             # Move up
-            self.player.y -= 5
-            pass
+            p_move_y -= self.player_speed
+
         elif self.event_e.input.keys[K_s] == True:
             # Move down
-            self.player.y += 5
-            pass
+            p_move_y += self.player_speed
         
         if self.event_e.input.keys[K_a] == True:
             # Move left
-            self.player.x -= 5
-            pass
+            p_move_x -= self.player_speed
+            
         elif self.event_e.input.keys[K_d] == True:
             # Move right
-            self.player.x += 5
-            pass
+            p_move_x += self.player_speed
+        
+        self.player.move(p_move_x, p_move_y, self.screen)
         
         self.bullet_update()
         
@@ -100,7 +106,7 @@ class game_engine:
         else:
             self.spawn(4)
         
-        self.clock.tick(30)
+        self.clock.tick(self.FPS)
             
     def score_inc(self, pts):
         self.score += 50*pts
@@ -179,7 +185,7 @@ class game_engine:
 
     def bullet_update(self):
         for b in self.bullets:
-            if b.x > 700 or b.x < 100 or b.y > 500 or b.y < 100:
+            if b.x > 800 or b.x < 0 or b.y > 600 or b.y < 0:
                 self.bullets.remove(b)
             b.move()
 
