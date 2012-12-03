@@ -32,7 +32,8 @@ class game_engine:
                            vector2(-20, 0)], 5)
         self.enemies = []
         self.bullets = []
-        self.score = 100
+        self.score = 0
+        self.high_score = 0
         self.rep_interval = 200
         self.rep_count = 1
         self.shoot_interval = self.FPS/10
@@ -50,7 +51,11 @@ class game_engine:
         self.enemies = []
         del self.bullets
         self.bullets = []
-        self.spawn(2)
+        self.spawn(4)
+
+    def game_over(self):
+        self.reset_game()
+        self.reset_score()
 
     def update(self):
         p_move_x = 0 # How much the player will move (H)
@@ -118,9 +123,21 @@ class game_engine:
     def score_inc(self, pts):
         self.score += 50*pts
         sc = self._hud.get("Score")
-        if(sc is not None):
+        if sc is not None:
             sc.text = "score "+str(self.score)
-            
+        if self.score > self.high_score:
+            self.high_score = self.score
+            hsc = self._hud.get("HighScore")
+            if hsc is not None:
+                hsc.text = "high score "+str(self.high_score)
+                
+    def reset_score(self):
+        print "SCORE RESET FROM", self.score
+        self.score = 0
+        sc = self._hud.get("Score")
+        if(sc is not None):
+            sc.text = "score "+str(self.score)        
+    
     def collide(self):
         dead_enemies = []
         dead_bullets = []
@@ -138,6 +155,11 @@ class game_engine:
             self.enemies.remove(e)
         for b in dead_bullets:
             self.bullets.remove(b)
+        
+        for p in self.player.points:
+            for e in self.enemies:
+                if e.point_inside(p+vector2(self.player.x, self.player.y)):
+                    self.game_over()
                     
     def draw(self):
         self.draw_e.begin_draw(pygame.Color(0,0,0))
@@ -153,6 +175,9 @@ class game_engine:
                                   (750, 550), (50, 550), 2)))
         self._hud.add(hud_text("Score", pygame.Color(255, 255, 255),
                                "score "+str(self.score), (15, 20), 1, 2))
+        self._hud.add(hud_text("HighScore", pygame.Color(255, 255, 255),
+                               "high score "+str(self.high_score), (15, 575), 
+                               1, 2))
         """
         self._hud.add(hud_line("Line1", pygame.Color(255, 0, 255), 
                                ((100, 100), (700, 100), 4)))
