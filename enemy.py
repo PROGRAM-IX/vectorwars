@@ -6,7 +6,7 @@ from pygame import *
 
 class Enemy(vex):
     def __init__(self, x, y, colour, points, width, 
-                 beh_dict={'follow': 100}):
+                 beh_dict={'follow': 50}):
         vex.__init__(self, x, y, colour, points, width)
         self.beh = beh_dict
     
@@ -77,6 +77,17 @@ class Enemy(vex):
                     pts.append(this_rel_pts[i])
         pts_rev = pts[:]
         pts_rev.reverse()
+        beh = {}
+        
+        for b1 in self.beh:
+            if choice((True, False)) == True:
+                #beh.add(b1)
+                beh[b1] = randint(0, self.beh[b1])
+        for b2 in v.beh:
+            if choice((True, False)) == True:
+                #beh.add(b2)
+                beh[b2] = randint(v.beh[b2], 100)
+        
         for i in pts_rev:
             pts.append(vector2(-i.x, i.y))
             #print pts[-1]
@@ -84,19 +95,21 @@ class Enemy(vex):
     
 def gen(x, y):
     pts = []
-    num_pts = randint(4, 20)
+    num_pts = randint(20, 50)
     col_r = randint(10, 255)
     col_g = randint(10, 255)
     col_b = randint(10, 255)
     colour = pygame.Color(col_r, col_g, col_b)
     for i in range(0, num_pts/2):
-        pts.append(vector2(randint(-vex.radius, 0), 
+        pts.append(vector2(randint(-vex.radius, -5), 
              randint(-vex.radius, vex.radius)))
     # Duplicate the list
     pts_rev = pts[:]
     # Reverse the new list
     pts_rev.reverse()
     # Copy the horizontally-inverted points into the array
+    f_c = randint(0, 100)
+    a_c = randint(0, 100)
     for i in pts_rev:
         pts.append(vector2(-i.x, i.y))
-    return Enemy(x, y, colour, pts, 2)
+    return Enemy(x, y, colour, pts, 2, {'follow':f_c, 'avoid':a_c})
