@@ -95,7 +95,7 @@ class Enemy(vex):
     
 def gen(x, y):
     pts = []
-    num_pts = randint(20, 50)
+    num_pts = randint(6, 20)
     col_r = randint(10, 255)
     col_g = randint(10, 255)
     col_b = randint(10, 255)

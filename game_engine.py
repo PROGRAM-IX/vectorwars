@@ -34,7 +34,8 @@ class game_engine:
         self.bullets = []
         self.score = 0
         self.high_score = 0
-        self.rep_interval = 200
+        #self.rep_interval = self.FPS * 10 / 3
+        self.rep_interval = self.FPS/10
         self.rep_count = 1
         self.shoot_interval = self.FPS/10
         self.shoot_count = 0
@@ -110,11 +111,14 @@ class game_engine:
         self.bullet_update()
         
         
-        if len(self.enemies) is not 0:
+        if len(self.enemies) > 1:
             self.rep()
-            self.collide()
-        else:
-            self.spawn(4)
+        elif len(self.enemies) == 0:
+            self.game_over()
+        #else:
+            #self.spawn(4)
+        self.collide()
+        
         
         
         
@@ -190,6 +194,7 @@ class game_engine:
         self._hud.add(hud_text("A2", pygame.Color(255, 255, 0), 
                                "0123456789", (400, 450), 1, 2))
         """
+        self.spawn(4)
         while True:
             self.update()
             self.draw()
