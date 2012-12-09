@@ -7,7 +7,7 @@ from behaviour_engine import BehaviourEngine
 from random import randint
 
 from vex import vex
-from enemy import Enemy, gen
+from enemy import gen
 from bullet import bullet_d, bullet_p
 from vector2 import vector2
 from player import player
@@ -21,6 +21,7 @@ class game_engine:
     def __init__(self, screen):
         self.FPS = 60
         i_e = input_engine()
+        
         self.screen = screen
         self.event_e = event_engine(i_e)
         self.draw_e = draw_engine(screen)
@@ -28,8 +29,8 @@ class game_engine:
         self.clock = pygame.time.Clock()
         self._hud = hud()
         self.player = player(400, 300, pygame.Color(0, 255, 0), 
-                          [vector2(0, -20), vector2(20, 0), vector2(0, 20), 
-                           vector2(-20, 0)], 5)
+                          [vector2(0, 20), vector2(10, 0), vector2(10, -20), 
+                           vector2(-10, -20), vector2(-10, 0)], 3)
         self.enemies = []
         self.bullets = []
         self.score = 0
@@ -52,6 +53,9 @@ class game_engine:
         self.enemies = []
         del self.bullets
         self.bullets = []
+        self.shoot_count = 0
+    
+    def populate(self):
         self.spawn(4)
 
     def game_over(self):
@@ -69,6 +73,7 @@ class game_engine:
             self.score_inc(5)
         if self.event_e.input.keys[K_c] == True:
             self.reset_game()
+            self.populate()
         if self.event_e.input.keys[K_DOWN] == True:
             # Fire down
             self.player_shoot_dir(0)
@@ -104,6 +109,10 @@ class game_engine:
             # Move right
             p_move_x += self.player_speed
         
+        self.player.rotate_to_face_point(vector2(
+                self.event_e.input.mouse_pos[0], 
+                self.event_e.input.mouse_pos[1]))
+        
         self.beh_e.update(self.enemies, self.player, self.screen)
         
         self.player.move(p_move_x, p_move_y, self.screen)
@@ -113,17 +122,15 @@ class game_engine:
         
         if len(self.enemies) > 1:
             self.rep()
-        elif len(self.enemies) == 0:
+        elif len(self.enemies) == 0 and self.score > 0:
             self.game_over()
         #else:
             #self.spawn(4)
+        
         self.collide()
         
-        
-        
-        
         self.clock.tick(self.FPS)
-            
+
     def score_inc(self, pts):
         self.score += 50*pts
         sc = self._hud.get("Score")
@@ -183,8 +190,12 @@ class game_engine:
                                "high score "+str(self.high_score), (15, 575), 
                                1, 2))
         """
-        self._hud.add(hud_line("Line1", pygame.Color(255, 0, 255), 
-                               ((100, 100), (700, 100), 4)))
+        self._hud.add(hud_line("Y", pygame.Color(255, 0, 255), 
+                               ((400, 0), (400, 600), 2)))
+        self._hud.add(hud_line("X", pygame.Color(255, 0, 255), 
+                               ((0, 300), (800, 300), 2)))
+        
+        
         self._hud.add(hud_text("A1", pygame.Color(255, 255, 0), 
                                "abcdefghijk", (400, 300), 1, 2))
         self._hud.add(hud_text("A2", pygame.Color(255, 255, 0), 

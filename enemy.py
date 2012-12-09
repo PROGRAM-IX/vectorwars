@@ -112,4 +112,4 @@ def gen(x, y):
     a_c = randint(0, 100)
     for i in pts_rev:
         pts.append(vector2(-i.x, i.y))
-    return Enemy(x, y, colour, pts, 2, {'follow':f_c, 'avoid':a_c})
+    return Enemy(x, y, colour, pts, 1, {'follow':f_c, 'avoid':a_c})

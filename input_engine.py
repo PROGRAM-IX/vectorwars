@@ -4,11 +4,12 @@ from pygame.locals import *
 class input_engine:
     def __init__(self):
         self.keys = [0] * 1024
-        self.mouse_pos = (0,0)
+        self.mouse_pos = (1,1)
         self.mouse_buttons = [0] * 16
-    
+        
     def mouse_motion(self, event):
-        self.mouse_pos = event.pos
+        if self.mouse_pos is not event.pos:
+            self.mouse_pos = event.pos    
     
     def mouse_b_down(self, event):
         self.mouse_buttons[event.button] = True
