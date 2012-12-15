@@ -2,9 +2,10 @@ import pygame
 from pygame.locals import *
 from random import *
 
-from vector2 import vector2
+from vector2 import Vector2
 from vex import *
-from player import vex_player
+from enemy import gen
+from player import Player
 
 import math
 
@@ -22,10 +23,10 @@ def main():
     global count, shapes, screen, clock
     screen = pygame.display.set_mode((800, 600))
     shapes = []
-    arrow_pts = [vector2(60, 0), vector2(20, 40), vector2(20, 20), 
-            vector2(-60, 20), vector2(-60, -20), vector2(20, -20), 
-            vector2(20, -40)]
-    player = vex_player(50, 50, Color(255, 255, 255), arrow_pts, 2)
+    arrow_pts = [Vector2(60, 0), Vector2(20, 40), Vector2(20, 20), 
+            Vector2(-60, 20), Vector2(-60, -20), Vector2(20, -20), 
+            Vector2(20, -40)]
+    player = Player(50, 50, Color(255, 255, 255), arrow_pts, 2)
     shapes.append(player)
     rotate_done = False
     mousex = 400

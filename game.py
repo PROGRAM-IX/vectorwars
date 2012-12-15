@@ -1,5 +1,5 @@
 import pygame
-from game_engine import game_engine
+from game_engine import GameEngine
 
 class game:
     def __init__(self, width, height):
@@ -11,7 +11,7 @@ class game:
     def start(self):
         pygame.init()
         self.screen = pygame.display.set_mode((self.width, self.height))
-        self.engine = game_engine(self.screen)
+        self.engine = GameEngine(self.screen)
         self.engine.run()
         
 def main():

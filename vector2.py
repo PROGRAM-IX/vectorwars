@@ -1,6 +1,6 @@
 import math
 
-class vector2():
+class Vector2():
     """Most of this taken from Will McGugan's Beginning Game Development 
     with Python and Pygame"""
     def __init__(self, x=0.0, y=0.0):
@@ -12,7 +12,7 @@ class vector2():
     
     @staticmethod
     def from_points(a, b):
-        return vector2(b[0]-a[0], b[1]-a[1])
+        return Vector2(b[0]-a[0], b[1]-a[1])
 
     def get_magnitude(self):
         return math.sqrt(self.x**2 + self.y**2)
@@ -20,9 +20,9 @@ class vector2():
     def normalised(self):
         magnitude = self.get_magnitude()
         if not magnitude == 0:
-            return vector2(self.x * 1/magnitude, self.y * 1/magnitude)
+            return Vector2(self.x * 1/magnitude, self.y * 1/magnitude)
         else:
-            return vector2(self.x, self.y)
+            return Vector2(self.x, self.y)
     
     # my dot product function
     def dot_product(self, other):
@@ -38,8 +38,8 @@ class vector2():
         return min(max(x, a), b)
 
     def radians_between(self, other):
-        own = vector2(self.x, self.y)
-        v = vector2(other.x, other.y)
+        own = Vector2(self.x, self.y)
+        v = Vector2(other.x, other.y)
         own.normalise()
         v.normalise()
         #d_p = (self.clamp(self.dot_product(other), -1.0, 1.0))
@@ -51,17 +51,17 @@ class vector2():
 
     
     def __add__(self, rhs): # rhs = right hand side of + operation
-        return vector2(self.x + rhs.x, self.y + rhs.y)
+        return Vector2(self.x + rhs.x, self.y + rhs.y)
 
     def __sub__(self, rhs):
-        return vector2(self.x - rhs.x, self.y - rhs.y)
+        return Vector2(self.x - rhs.x, self.y - rhs.y)
 
     def __neg__(self, rhs):
-        return vector2(-self.x, -self.y)
+        return Vector2(-self.x, -self.y)
 
     def __mul__(self, scalar):
-        return vector2(self.x * scalar, self.y * scalar)
+        return Vector2(self.x * scalar, self.y * scalar)
 
     def __div__(self, scalar):
-        return vector2(self.x / scalar, self.y / scalar)
+        return Vector2(self.x / scalar, self.y / scalar)
 

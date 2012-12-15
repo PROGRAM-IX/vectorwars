@@ -2,27 +2,27 @@ import pygame
 from pygame.locals import *
 
 import math
-from vector2 import vector2
-from vex import vex
+from vector2 import Vector2
+from vex import Vex
 
-class bullet_d(vex):
+class BulletD(Vex):
     """Bullet that flies in one of the four cardinal directions"""
     def __init__(self, x, y, direction):
         if direction == 0:
-            vex.__init__(self, x, y, Color(0, 255, 0),
-                     [vector2(0, 5), vector2(2, -5), vector2(-2, -5)], 
+            Vex.__init__(self, x, y, Color(0, 255, 0),
+                     [Vector2(0, 5), Vector2(2, -5), Vector2(-2, -5)], 
                      1)
         if direction == 1:
-            vex.__init__(self, x, y, Color(0, 255, 0),
-                     [vector2(5, 0), vector2(-5, -2), vector2(-5, 2)], 
+            Vex.__init__(self, x, y, Color(0, 255, 0),
+                     [Vector2(5, 0), Vector2(-5, -2), Vector2(-5, 2)], 
                      1)
         if direction == 2:
-            vex.__init__(self, x, y, Color(0, 255, 0),
-                     [vector2(0, -5), vector2(2, 5), vector2(-2, 5)], 
+            Vex.__init__(self, x, y, Color(0, 255, 0),
+                     [Vector2(0, -5), Vector2(2, 5), Vector2(-2, 5)], 
                      1)
         if direction == 3:
-            vex.__init__(self, x, y, Color(0, 255, 0),
-                     [vector2(-5, 0), vector2(5, -2), vector2(5, 2)], 
+            Vex.__init__(self, x, y, Color(0, 255, 0),
+                     [Vector2(-5, 0), Vector2(5, -2), Vector2(5, 2)], 
                      1)
             
         if direction == 0:
@@ -43,12 +43,12 @@ class bullet_d(vex):
         self.x += self.x_mod
         self.y += self.y_mod
         
-class bullet_p(vex):
+class BulletP(Vex):
     """Bullet that moves towards a point"""
     def __init__(self, x, y, p):
         """Create new bullet"""
-        vex.__init__(self, x, y, Color(0, 255, 0),
-                 [vector2(0, 5), vector2(2, -5), vector2(-2, -5)], 1)
+        Vex.__init__(self, x, y, Color(0, 255, 0),
+                 [Vector2(0, 5), Vector2(2, -5), Vector2(-2, -5)], 1)
         self.p = p
         v = self.vector_between(p)
         self.x_mod = v.normalised().x * 15

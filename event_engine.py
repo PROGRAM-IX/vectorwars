@@ -1,7 +1,7 @@
 import pygame
 from pygame.locals import *
 
-class event_engine:
+class EventEngine:
     """Manages the event queue and passes events to other engines"""
     
     def __init__(self, i_e):

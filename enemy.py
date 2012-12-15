@@ -1,19 +1,19 @@
-from vex import vex
-from vector2 import vector2
+from vex import Vex
+from vector2 import Vector2
 from random import *
 import pygame
 from pygame import *
 
-class Enemy(vex):
+class Enemy(Vex):
     def __init__(self, x, y, colour, points, width, 
                  beh_dict={'follow': 50}):
-        vex.__init__(self, x, y, colour, points, width)
+        Vex.__init__(self, x, y, colour, points, width)
         self.beh = beh_dict
     
     def reproduce(self, v, x, y): # Factory method pattern?
         pts = []
         num_pts = 0 # number of points in child 
-        pos = vector2(x, y) # vector of position to place child
+        pos = Vector2(x, y) # vector of position to place child
         this_rel_pts = self.get_relative_points_vector2() 
         v_rel_pts = v.get_relative_points_vector2()
         # decide number of points in child
@@ -62,8 +62,8 @@ class Enemy(vex):
         # Grab points from both parents and generate random ones
         for i in xrange(0, num_pts/2):
             if i % 3 == 0:
-                pt = vector2(randint(-vex.radius, 0), 
-                        randint(-vex.radius, vex.radius))
+                pt = Vector2(randint(-Vex.radius, 0), 
+                        randint(-Vex.radius, Vex.radius))
                 pts.append(pt)
             elif i % 2 == 0:
                 if i < len(this_rel_pts):
@@ -89,7 +89,7 @@ class Enemy(vex):
                 beh[b2] = randint(v.beh[b2], 100)
         
         for i in pts_rev:
-            pts.append(vector2(-i.x, i.y))
+            pts.append(Vector2(-i.x, i.y))
             #print pts[-1]
         return Enemy(x, y, colour, pts, 2)
     
@@ -101,8 +101,8 @@ def gen(x, y):
     col_b = randint(10, 255)
     colour = pygame.Color(col_r, col_g, col_b)
     for i in range(0, num_pts/2):
-        pts.append(vector2(randint(-vex.radius, -5), 
-             randint(-vex.radius, vex.radius)))
+        pts.append(Vector2(randint(-Vex.radius, -5), 
+             randint(-Vex.radius, Vex.radius)))
     # Duplicate the list
     pts_rev = pts[:]
     # Reverse the new list
@@ -111,5 +111,5 @@ def gen(x, y):
     f_c = randint(0, 100)
     a_c = randint(0, 100)
     for i in pts_rev:
-        pts.append(vector2(-i.x, i.y))
+        pts.append(Vector2(-i.x, i.y))
     return Enemy(x, y, colour, pts, 1, {'follow':f_c, 'avoid':a_c})

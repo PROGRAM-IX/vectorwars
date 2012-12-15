@@ -1,7 +1,7 @@
 import pygame
 from pygame.locals import *
 
-class draw_engine:
+class DrawEngine:
     def __init__(self, screen):
         self.screen = screen
     

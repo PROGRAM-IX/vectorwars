@@ -1,6 +1,6 @@
 import pygame
 from pygame.locals import *
-from vector2 import vector2
+from vector2 import Vector2
 from random import *
 import math
 
@@ -9,7 +9,7 @@ def print_randint(a, b):
     print "Random: ", num
     return num
 
-class vex():
+class Vex():
     radius = 20
     def __str__(self):
         string = "Colour: %d, %d, %d" % (self.colour.r, self.colour.g, self.colour.b)
@@ -42,7 +42,7 @@ class vex():
         # else rotates. 
         
         
-        v = vector2(self.points[0].x, self.points[0].y)
+        v = Vector2(self.points[0].x, self.points[0].y)
         """
         # Trying to avoid weird edge cases where the mouse is close to the 
         # rotating body
@@ -55,7 +55,7 @@ class vex():
         elif v.y > v.x and abs(v.x) > 0 and abs(v.y) > 0:
             v = v/(v.y)
         """
-        return v + vector2(self.x, self.y)
+        return v + Vector2(self.x, self.y)
 
     def draw(self, surface):
         pygame.draw.polygon(surface, self.colour, 
@@ -109,8 +109,8 @@ class vex():
         # Normalising won't work - only covers one sector then
        
         # Trying relative vector mathematics
-        p = p - vector2(self.x, self.y)
-        direction = vector2(self.points[0].x, self.points[0].y)
+        p = p - Vector2(self.x, self.y)
+        direction = Vector2(self.points[0].x, self.points[0].y)
         #direction = self.dir_vec()
         v = p - direction
         return v
@@ -121,6 +121,7 @@ class vex():
         # Getting consistency by forcing angle to points on the 360deg circle
         #angle_deg = int(math.atan2(v.x, v.y) * (180 / math.pi))
         #angle = angle_deg / (180 / math.pi)
+        # This is wrong, should be y, x
         angle = math.atan2(v.x, v.y)
         #print angle_deg, angle
         #angle_deg = int(angle * 180/math.pi)
@@ -135,7 +136,7 @@ class vex():
         """Rotate the vex to face a point x, y"""
         # Rotation doesn't work continuously unless the start point is always
         # the same. This sets it.
-        angle_start = self.angle_to_face_point(vector2(self.x, self.y))
+        angle_start = self.angle_to_face_point(Vector2(self.x, self.y))
         self.rotate_by_radians(angle_start)
         # For some reason everything points the wrong way. Simply reverse the
         # angle here.
@@ -198,7 +199,7 @@ class vex():
         """
         pts = []
         for p in self.points:
-            pts.append(vector2(p.x, p.y))
+            pts.append(Vector2(p.x, p.y))
         return pts
 
     def get_absolute_points_vector2(self):
@@ -208,7 +209,7 @@ class vex():
         """
         pts = []
         for p in self.points:
-            pts.append(vector2(p.x+self.x, p.y+self.y))
+            pts.append(Vector2(p.x+self.x, p.y+self.y))
         return pts
     
     def point_inside(self, v):

@@ -1,5 +1,5 @@
-from vex import vex
+from vex import Vex
 
-class player(vex):
+class Player(Vex):
     def __init__(self, x, y, colour, points, width):
-        vex.__init__(self, x, y, colour, points, width)
+        Vex.__init__(self, x, y, colour, points, width)

@@ -6,31 +6,31 @@ from behaviour_engine import BehaviourEngine
 
 from random import randint
 
-from vex import vex
+from vex import Vex
 from enemy import gen
-from bullet import bullet_d, bullet_p
-from vector2 import vector2
-from player import player
+from bullet import BulletD, BulletP
+from vector2 import Vector2
+from player import Player
 
-from input_engine import input_engine
-from event_engine import event_engine
-from draw_engine import draw_engine
+from input_engine import InputEngine
+from event_engine import EventEngine
+from draw_engine import DrawEngine
 
 
-class game_engine:
+class GameEngine:
     def __init__(self, screen):
         self.FPS = 60
-        i_e = input_engine()
+        i_e = InputEngine()
         
         self.screen = screen
-        self.event_e = event_engine(i_e)
-        self.draw_e = draw_engine(screen)
+        self.event_e = EventEngine(i_e)
+        self.draw_e = DrawEngine(screen)
         self.beh_e = BehaviourEngine()
         self.clock = pygame.time.Clock()
-        self._hud = hud()
-        self.player = player(400, 300, pygame.Color(0, 255, 0), 
-                          [vector2(0, 20), vector2(10, 0), vector2(10, -20), 
-                           vector2(-10, -20), vector2(-10, 0)], 3)
+        self._hud = HUD()
+        self.player = Player(400, 300, pygame.Color(0, 255, 0), 
+                          [Vector2(0, 20), Vector2(10, 0), Vector2(10, -20), 
+                           Vector2(-10, -20), Vector2(-10, 0)], 3)
         self.enemies = []
         self.bullets = []
         self.score = 0
@@ -88,7 +88,7 @@ class game_engine:
             self.player_shoot_dir(1)
         elif self.event_e.input.mouse_buttons[1] == True:
             # Fire towards the mouse cursor
-            self.player_shoot_point(vector2(self.event_e.input.mouse_pos[0],
+            self.player_shoot_point(Vector2(self.event_e.input.mouse_pos[0],
                                     self.event_e.input.mouse_pos[1]))
         else:
             self.shoot_count = 0
@@ -109,7 +109,7 @@ class game_engine:
             # Move right
             p_move_x += self.player_speed
         
-        self.player.rotate_to_face_point(vector2(
+        self.player.rotate_to_face_point(Vector2(
                 self.event_e.input.mouse_pos[0], 
                 self.event_e.input.mouse_pos[1]))
         
@@ -154,7 +154,7 @@ class game_engine:
         dead_bullets = []
         for e in self.enemies:
             for b in self.bullets:
-                if e.point_inside(vector2(b.x, b.y)): 
+                if e.point_inside(Vector2(b.x, b.y)): 
                     #print "COLLIDE2"       
                     self.score_inc(len(e.points))
                     if e not in dead_enemies:
@@ -169,7 +169,7 @@ class game_engine:
         
         for p in self.player.points:
             for e in self.enemies:
-                if e.point_inside(p+vector2(self.player.x, self.player.y)):
+                if e.point_inside(p+Vector2(self.player.x, self.player.y)):
                     self.game_over()
                     
     def draw(self):
@@ -181,12 +181,12 @@ class game_engine:
         self.draw_e.end_draw()
         
     def run(self):
-        self._hud.add(hud_polygon("Box1", pygame.Color(255, 255, 255),
+        self._hud.add(HUDPolygon("Box1", pygame.Color(255, 255, 255),
                                   ((50, 50), (750, 50), 
                                   (750, 550), (50, 550), 2)))
-        self._hud.add(hud_text("Score", pygame.Color(255, 255, 255),
+        self._hud.add(HUDText("Score", pygame.Color(255, 255, 255),
                                "score "+str(self.score), (15, 20), 1, 2))
-        self._hud.add(hud_text("HighScore", pygame.Color(255, 255, 255),
+        self._hud.add(HUDText("HighScore", pygame.Color(255, 255, 255),
                                "high score "+str(self.high_score), (15, 575), 
                                1, 2))
         """
@@ -239,12 +239,12 @@ class game_engine:
 
     def player_shoot_dir(self, direction):
         if self.shoot_count % self.shoot_interval == 0:
-            b = bullet_d(self.player.x, self.player.y, direction)
+            b = BulletD(self.player.x, self.player.y, direction)
             self.bullets.append(b)
         self.shoot_count += 1
 
     def player_shoot_point(self, point):
         if self.shoot_count % self.shoot_interval == 0:
-            b = bullet_p(self.player.x, self.player.y, point)
+            b = BulletP(self.player.x, self.player.y, point)
             self.bullets.append(b)
         self.shoot_count += 1

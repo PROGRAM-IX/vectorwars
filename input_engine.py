@@ -1,7 +1,7 @@
 import pygame
 from pygame.locals import *
 
-class input_engine:
+class InputEngine:
     def __init__(self):
         self.keys = [0] * 1024
         self.mouse_pos = (1,1)

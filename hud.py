@@ -2,7 +2,7 @@ import pygame
 from pygame.locals import *
 import copy
 
-class hud_element:
+class HUDElement:
     def __init__(self, label, colour):
         """
         label: description of the element
@@ -15,7 +15,7 @@ class hud_element:
         """Draw the element to the screen"""
         pass
 
-class hud_text(hud_element):
+class HUDText(HUDElement):
     
     letters = { 
         'a': ((-5, -10), (-5, 15), (-5, 0), (5, 0), (5, 15), 
@@ -81,7 +81,7 @@ class hud_text(hud_element):
         pos: coordinates of element
         """
         
-        hud_element.__init__(self, label, colour)
+        HUDElement.__init__(self, label, colour)
         self.text = text
         self.pos = pos
         self.size = size
@@ -106,7 +106,7 @@ class hud_text(hud_element):
             c_pos = (c_pos[0] + self.size * 15, c_pos[1])
 
 
-class hud_line(hud_element):
+class HUD_Line(HUDElement):
     def __init__(self, label, colour, line):
         """
         label: description of the element
@@ -114,7 +114,7 @@ class hud_line(hud_element):
         line: line portion of the element
             (start pos tuple, end pos tuple, width)
         """
-        hud_element.__init__(self, label, colour)
+        HUDElement.__init__(self, label, colour)
         self.line = line
     
     def draw(self, screen):
@@ -122,7 +122,7 @@ class hud_line(hud_element):
         pygame.draw.line(screen, self.colour, self.line[0], self.line[1], 
                          self.line[-1])
         
-class hud_polygon(hud_element):
+class HUDPolygon(HUDElement):
     def __init__(self, label, colour, lines):
         """
         label: description of the element
@@ -130,7 +130,7 @@ class hud_polygon(hud_element):
         lines: lines portion of the element
             (points tuple, width)
         """
-        hud_element.__init__(self, label, colour)
+        HUDElement.__init__(self, label, colour)
         self.lines = lines
         
     def draw(self, screen):
@@ -138,7 +138,7 @@ class hud_polygon(hud_element):
         pygame.draw.polygon(screen, self.colour, self.lines[:-1], 
                             self.lines[-1])
     
-class hud:
+class HUD:
     def __init__(self):
         self.elements = []
     
