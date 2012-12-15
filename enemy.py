@@ -1,5 +1,5 @@
-from vex import Vex
-from vector2 import Vector2
+from pystroke.vex import Vex
+from pystroke.vector2 import Vector2
 from random import *
 import pygame
 from pygame import *
