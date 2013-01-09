@@ -18,8 +18,8 @@ from random import randint
 
 
 class VWGameEngine(GameEngine):
-    def __init__(self, screen):
-        GameEngine.__init__(self, screen)
+    def __init__(self, screen, event_e):
+        GameEngine.__init__(self, screen, event_e)
         self.beh_e = VWBehaviourEngine()
         self.FPS = 60
         self.player = Player(400, 300, pygame.Color(0, 255, 0), 
@@ -62,7 +62,7 @@ class VWGameEngine(GameEngine):
         
         self.event_e.update()
         if self.event_e.input.keys[K_ESCAPE] == True:
-            raise SystemExit
+            return 1
         if self.event_e.input.keys[K_SPACE] == True:
             self.score_inc(5)
         if self.event_e.input.keys[K_c] == True:
@@ -124,6 +124,7 @@ class VWGameEngine(GameEngine):
         self.collide()
         
         self.clock.tick(self.FPS)
+        return 2
 
     def score_inc(self, pts):
         self.score += 50*pts
@@ -157,6 +158,7 @@ class VWGameEngine(GameEngine):
                         dead_bullets.append(b)
                     
         for e in dead_enemies:
+            #print self.player.distance_to(Vector2(e.x, e.y))
             self.enemies.remove(e)
         for b in dead_bullets:
             self.bullets.remove(b)
@@ -201,7 +203,9 @@ class VWGameEngine(GameEngine):
         """
         self.spawn(4)
         while True:
-            self.update()
+            r = self.update()
+            if r == 0 or r == 1:
+                return r
             self.draw()
             
     def rep(self):
