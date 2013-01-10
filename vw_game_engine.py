@@ -63,6 +63,8 @@ class VWGameEngine(GameEngine):
         self.event_e.update()
         if self.event_e.input.keys[K_ESCAPE] == True:
             return 1
+        elif self.event_e.input.keys[K_q] == True:
+            return 0
         if self.event_e.input.keys[K_SPACE] == True:
             self.score_inc(5)
         if self.event_e.input.keys[K_c] == True:
