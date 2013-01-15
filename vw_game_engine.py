@@ -111,7 +111,7 @@ class VWGameEngine(GameEngine):
         
         self.beh_e.update(self.enemies, self.player, self.screen)
         
-        self.player.move(p_move_x, p_move_y, self.screen)
+        self.player.move_abs(p_move_x, p_move_y, self.screen)
         
         self.bullet_update()
         
