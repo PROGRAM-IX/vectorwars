@@ -15,7 +15,7 @@ class FollowBeh(Behaviour):
             v = e_pos - p_pos
             angle = math.atan2(v.x, v.y)
             #enemy.rotate_by_radians(angle)
-            enemy.move_rel(-v.normalised().x * 5, -v.normalised().y * 5, surface)
+            enemy.move_rel(-v.normalised().x * 3, -v.normalised().y * 3, surface)
 
 class AvoidBeh(Behaviour):
     
@@ -29,6 +29,6 @@ class AvoidBeh(Behaviour):
             v = e_pos - p_pos
             angle = math.atan2(v.x, v.y)
             #enemy.rotate_by_radians(angle)
-            enemy.move_rel(v.normalised().x * 5, v.normalised().y * 5, surface)
+            enemy.move_rel(v.normalised().x * 3, v.normalised().y * 3, surface)
         
         

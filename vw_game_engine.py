@@ -29,8 +29,8 @@ class VWGameEngine(GameEngine):
         self.bullets = []
         self.score = 0
         self.high_score = 0
-        #self.rep_interval = self.FPS * 10 / 3
-        self.rep_interval = self.FPS/10
+        self.rep_interval = self.FPS * 10 / 3
+        #self.rep_interval = self.FPS/10
         self.rep_count = 1
         self.shoot_interval = self.FPS/10
         self.shoot_count = 0
