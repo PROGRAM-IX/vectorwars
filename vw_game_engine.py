@@ -48,11 +48,17 @@ class VWGameEngine(GameEngine):
         del self.bullets
         self.bullets = []
         self.shoot_count = 0
+        
+    def set_end_screen(self, visible):
+        self._hud.get("GameOver1").visible = visible
+        self._hud.get("GameOver2").visible = visible
+        self._hud.get("GameOver3").visible = visible
     
     def populate(self):
         self.spawn(4)
 
     def game_over(self):
+        self.set_end_screen(True)
         self.reset_game()
         self.reset_score()
 
@@ -68,6 +74,7 @@ class VWGameEngine(GameEngine):
         if self.event_e.input.keys[K_SPACE] == True:
             self.score_inc(5)
         if self.event_e.input.keys[K_c] == True:
+            self.set_end_screen(False)
             self.reset_game()
             self.populate()
         if self.event_e.input.keys[K_DOWN] == True:
@@ -133,6 +140,9 @@ class VWGameEngine(GameEngine):
         sc = self._hud.get("Score")
         if sc is not None:
             sc.text = "score "+str(self.score)
+        go = self._hud.get("GameOver2")
+        if go is not None:
+            go.text = "score "+str(self.score)
         if self.score > self.high_score:
             self.high_score = self.score
             hsc = self._hud.get("HighScore")
@@ -189,22 +199,20 @@ class VWGameEngine(GameEngine):
         self._hud.add(HUDText("HighScore", pygame.Color(255, 255, 255),
                                "high score "+str(self.high_score), (15, 575), 
                                1, 2))
-        """
-        self._hud.add(hud_line("Y", pygame.Color(255, 0, 255), 
-                               ((400, 0), (400, 600), 2)))
-        self._hud.add(hud_line("X", pygame.Color(255, 0, 255), 
-                               ((0, 300), (800, 300), 2)))
+        self._hud.add(HUDText("GameOver1", pygame.Color(255, 0, 255),
+                               "game over", (100, 200), 
+                               5, 2, False))
+        self._hud.add(HUDText("GameOver2", pygame.Color(255, 0, 255),
+                               "score "+str(self.score), 
+                               (200, 300), 
+                               2, 2, False))
+        self._hud.add(HUDText("GameOver3", pygame.Color(255, 0, 255),
+                               "c to restart", 
+                               (200, 360), 
+                               2, 2, False))
         
         
-        self._hud.add(hud_text("A1", pygame.Color(255, 255, 0), 
-                               "abcdefghijk", (400, 300), 1, 2))
-        self._hud.add(hud_text("A2", pygame.Color(255, 255, 0), 
-                               "lmnopqrs", (400, 350), 1, 2))
-        self._hud.add(hud_text("A2", pygame.Color(255, 255, 0), 
-                               "tuvwxyz", (400, 400), 1, 2))
-        self._hud.add(hud_text("A2", pygame.Color(255, 255, 0), 
-                               "0123456789", (400, 450), 1, 2))
-        """
+        
         self.spawn(4)
         while True:
             r = self.update()
