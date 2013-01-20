@@ -35,17 +35,30 @@ class AvoidBeh(Behaviour):
         
 class GroupBeh(Behaviour):
     
-    def __init__(self):
+    def __init__(self, threshold, increment):
         Behaviour.__init__(self, 'group')
+        self.threshold = threshold
+        self.increment = increment
         
-    def process(self, enemies, player, surface):
+    def process(self, enemies, surface):
+        """
+        Moves vector sprites away from each other in small increments, which 
+        are fractions of the distance between them
+        
+        @type enemies: List of vector sprites 
+        @param enemies: Vector sprites on which to perform the behaviour
+        
+        @type surface: pygame.Surface
+        @param surface: The surface to move the enemies within
+        
+        @author: James Heslin (PROGRAM_IX) 
+        """
         for e in enemies:
             for f in enemies:
                 if e is not f:
                     dist = e.distance_to(Vector2(f.x, f.y))
-                    if dist < 50:
-                        print "Colliding"
+                    if dist < self.threshold:
                         v = (Vector2(e.x, e.y)-Vector2(f.x, f.y)).normalised()
-                        print v
-                        e.move_rel(v.x * dist/20, v.y * dist/20, surface)
+                        e.move_rel(v.x * dist/self.increment, 
+                                   v.y * dist/self.increment, surface)
         
