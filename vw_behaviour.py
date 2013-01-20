@@ -42,8 +42,7 @@ class GroupBeh(Behaviour):
         
     def process(self, enemies, surface):
         """
-        Moves vector sprites away from each other in small increments, which 
-        are fractions of the distance between them
+        Moves vector sprites away from each other in small increments
         
         @type enemies: List of vector sprites 
         @param enemies: Vector sprites on which to perform the behaviour
@@ -59,6 +58,6 @@ class GroupBeh(Behaviour):
                     dist = e.distance_to(Vector2(f.x, f.y))
                     if dist < self.threshold:
                         v = (Vector2(e.x, e.y)-Vector2(f.x, f.y)).normalised()
-                        e.move_rel(v.x * dist/self.increment, 
-                                   v.y * dist/self.increment, surface)
+                        e.move_rel(v.x * self.increment, 
+                                   v.y * self.increment, surface)
         
