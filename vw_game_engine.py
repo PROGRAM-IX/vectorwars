@@ -150,15 +150,16 @@ class VWGameEngine(GameEngine):
         dead_enemies = []
         dead_bullets = []
         for e in self.enemies:
-            for b in self.bullets:
-                if e.point_inside(Vector2(b.x, b.y)): 
-                    #print "COLLIDE2"       
-                    self.score_inc(len(e.points))
-                    if e not in dead_enemies:
-                        dead_enemies.append(e)
-                    if b not in dead_bullets:
-                        dead_bullets.append(b)
-                    
+            if e.lifetime >= 30:
+                for b in self.bullets:
+                    if e.point_inside(Vector2(b.x, b.y)): 
+                        #print "COLLIDE2"       
+                        self.score_inc(len(e.points))
+                        if e not in dead_enemies:
+                            dead_enemies.append(e)
+                        if b not in dead_bullets:
+                            dead_bullets.append(b)
+                        
         for e in dead_enemies:
             #print self.player.distance_to(Vector2(e.x, e.y))
             self.enemies.remove(e)
@@ -167,8 +168,9 @@ class VWGameEngine(GameEngine):
         
         for p in self.player.points:
             for e in self.enemies:
-                if e.point_inside(p+Vector2(self.player.x, self.player.y)):
-                    self.game_over()
+                if e.lifetime >= 30:
+                    if e.point_inside(p+Vector2(self.player.x, self.player.y)):
+                        self.game_over()
                     
     def draw(self):
         self.draw_e.begin_draw(pygame.Color(0,0,0))

@@ -9,6 +9,7 @@ class Enemy(Vex):
                  beh_dict={'follow': 50}):
         Vex.__init__(self, x, y, colour, points, width)
         self.beh = beh_dict
+        self.lifetime = 1
     
     def reproduce(self, v, x, y): # Factory method pattern?
         pts = []
@@ -93,6 +94,21 @@ class Enemy(Vex):
             #print pts[-1]
         return Enemy(x, y, colour, pts, 2)
     
+    def draw(self, surface):
+        if self.lifetime < 30:
+            pts = self.get_relative_points_tuple()
+            pts = tuple((self.x + p[0]/(30-self.lifetime), 
+                     self.y + p[1]/(30-self.lifetime)) for p in pts)
+        else:
+            pts = self.get_absolute_points_tuple()
+        
+        self.lifetime += 1
+        
+        
+        pygame.draw.polygon(surface, self.colour, 
+                pts, self.width)
+
+        
 def gen(x, y):
     pts = []
     num_pts = randint(6, 20)
