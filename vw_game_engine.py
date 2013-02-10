@@ -23,8 +23,13 @@ class VWGameEngine(GameEngine):
         self.beh_e = VWBehaviourEngine()
         self.FPS = 60
         self.player = Player(400, 300, pygame.Color(0, 255, 0), 
-                          [Vector2(0, 20), Vector2(10, 0), Vector2(10, -20), 
-                           Vector2(-10, -20), Vector2(-10, 0)], 3)
+                          [Vector2(0, -5), Vector2(-15, -20), Vector2(-20, -15), 
+                           Vector2(-10, 10), Vector2(0, 20), Vector2(10, 10), 
+                           Vector2(20, -15), Vector2(15, -20), Vector2(0, -5)], 
+                             1)
+        self.combo_ticks = self.FPS*3
+        self.combo_timer = 0
+        self.combo_num = 0
         self.enemies = []
         self.bullets = []
         self.score = 0
@@ -48,6 +53,12 @@ class VWGameEngine(GameEngine):
         del self.bullets
         self.bullets = []
         self.shoot_count = 0
+        self.combo_timer = 0
+        self.combo_num = 0
+        combo = self._hud.get("Combo")
+        combo.visible = False
+        if combo is not None:
+            combo.text = "combo "+str(self.combo_num)
         
     def set_end_screen(self, visible):
         self._hud.get("GameOver1").visible = visible
@@ -61,6 +72,17 @@ class VWGameEngine(GameEngine):
         self.set_end_screen(True)
         self.reset_game()
         self.reset_score()
+
+    def combo_tick(self):
+        if self.combo_timer > 0:
+            self.combo_timer -= 1
+        else:
+            self.combo_num = 0
+            combo = self._hud.get("Combo")
+            combo.visible = False
+            if combo is not None:
+                combo.text = "combo "+str(self.combo_num)
+        #print self.combo_num, self.combo_timer
 
     def update(self):
         p_move_x = 0 # How much the player will move (H)
@@ -131,11 +153,21 @@ class VWGameEngine(GameEngine):
             #self.spawn(4)
         
         self.collide()
+        self.combo_tick()
         
         self.clock.tick(self.FPS)
         return 2
 
     def score_inc(self, pts):
+        self.combo_timer = self.combo_ticks
+        self.combo_num += 1
+        if self.combo_num > 1:
+            pts = pts * self.combo_num
+            print "COMBO " + str(self.combo_num)
+            combo = self._hud.get("Combo")
+            combo.visible = True
+            if combo is not None:
+                combo.text = "combo "+str(self.combo_num)    
         self.score += 50*pts
         sc = self._hud.get("Score")
         if sc is not None:
@@ -210,7 +242,10 @@ class VWGameEngine(GameEngine):
                                "c to restart", 
                                (200, 360), 
                                2, 2, False))
-        
+        self._hud.add(HUDText("Combo", pygame.Color(255, 255, 255),
+                               "combo "+str(self.combo_num), 
+                               (650, 575), 
+                               1, 2, True))
         
         
         self.spawn(4)
