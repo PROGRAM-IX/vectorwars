@@ -23,9 +23,9 @@ class VWGameEngine(GameEngine):
         self.beh_e = VWBehaviourEngine()
         self.FPS = 60
         self.player = Player(400, 300, pygame.Color(0, 255, 0), 
-                          [Vector2(0, -5), Vector2(-15, -20), Vector2(-20, -15), 
+                          [Vector2(0, -5), Vector2(-15, -20), 
                            Vector2(-10, 10), Vector2(0, 20), Vector2(10, 10), 
-                           Vector2(20, -15), Vector2(15, -20), Vector2(0, -5)], 
+                           Vector2(15, -20), Vector2(0, -5)], 
                              1)
         self.combo_ticks = self.FPS*3
         self.combo_timer = 0
