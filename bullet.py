@@ -2,8 +2,8 @@ import pygame
 from pygame.locals import *
 
 import math
-from vector2 import Vector2
-from vex import Vex
+from pystroke.vector2 import Vector2
+from pystroke.vex import Vex
 
 class BulletD(Vex):
     """Bullet that flies in one of the four cardinal directions"""

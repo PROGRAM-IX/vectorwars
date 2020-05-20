@@ -1,4 +1,4 @@
-from vex import Vex
+from pystroke.vex import Vex
 
 class Player(Vex):
     def __init__(self, x, y, colour, points, width):
